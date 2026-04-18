@@ -1,7 +1,9 @@
 from locators.text_box_page_locators import TextBoxPageLocators
+from locators.check_box_page_locators import CheckBoxPageLocators
 from pages.base_page import BasePage
 import time
 from data.genarator.genarator import person_genarated
+import random
 
 
 class TextBoxPage(BasePage):
@@ -26,5 +28,43 @@ class TextBoxPage(BasePage):
         current_address = self.element_is_present(self.locators.CURRENT_ADDRESS_CREATED).text.split(':')[1]
         permanent_address = self.element_is_present(self.locators.PERMANENT_ADDRESS_CREATED).text.split(':')[1]
         return full_name, email, current_address, permanent_address
+    
+
+class CheckBoxPage(BasePage):
+    locators = CheckBoxPageLocators()
+    #Открываю все свитчеры
+    def open_full_list(self):
+        
+        while True:
+            closed_tree_switcher = self.driver.find_elements(*self.locators.TREE_SWITCHER)
+            if not closed_tree_switcher:
+                break
+            closed_tree_switcher[0].click()
+
+
+    def random_click_to_checkbox(self):
+        items = self.elements_are_visible(self.locators.CHECK_BOX)
+        item = items[random.randint(2,15)]
+        self.scroll_to_element(item)
+        item.click()
+        
+    def get_selected_checkbox_labels(self):
+        elements  = self.elements_are_presents(self.locators.aria_checked)
+        lables = []
+        for element in elements:
+            lables.append(element.get_attribute('aria-label').split()[1].lower()) 
+        return lables    
+    
+    def get_displayed_selected_values(self):
+        elements = self.elements_are_presents(self.locators.text_success)
+        values = []
+        for element in elements:
+            values.append(element.text) 
+        return values 
+
+        
+        
+            
+
         
         
