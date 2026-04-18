@@ -1,4 +1,4 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
 import time
 
 
@@ -32,6 +32,19 @@ class TestElements:
             expected_res = page.get_selected_checkbox_labels()
             displayed_res = page.get_displayed_selected_values() 
             assert set(displayed_res) == set(expected_res), f"Ожидаемый результат: {expected_res} не совпадает с фактическим: {displayed_res}"
+
+    class TestRadioButtonPage:
+        def test_radio_button_yes(self, driver):
+            radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
+            radio_button_page.open()
+            radio_button_page.click_to_radio_button_yes()
+            assert "Yes" in radio_button_page.get_displayed_selected_button()
+
+        def test_to_radio_button_impressive(self, driver):
+            radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
+            radio_button_page.open()
+            radio_button_page.click_to_radio_button_impressive()
+            assert "Impressive" in radio_button_page.get_displayed_selected_button()
             
             
             
