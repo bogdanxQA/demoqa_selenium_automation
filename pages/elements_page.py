@@ -1,0 +1,30 @@
+from locators.text_box_page_locators import TextBoxPageLocators
+from pages.base_page import BasePage
+import time
+from data.genarator.genarator import person_genarated
+
+
+class TextBoxPage(BasePage):
+    locators = TextBoxPageLocators()
+
+    def fill_all_inputs(self):
+        person_info = next(person_genarated())
+        full_name = person_info.full_name
+        email = person_info.email
+        current_address = person_info.current_address
+        permanent_address = person_info.permanent_address
+        self.element_is_visible(self.locators.FULL_NAME).send_keys(full_name)
+        self.element_is_visible(self.locators.EMAIL).send_keys(email)
+        self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
+        self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
+        self.element_is_visible(self.locators.SUBMIT).click()
+        return full_name, email, current_address, permanent_address
+
+    def check_created_form(self):
+        full_name = self.element_is_present(self.locators.NAME_CREATED).text.split(':')[1]
+        email = self.element_is_present(self.locators.EMAIL_CREATED).text.split(':')[1]
+        current_address = self.element_is_present(self.locators.CURRENT_ADDRESS_CREATED).text.split(':')[1]
+        permanent_address = self.element_is_present(self.locators.PERMANENT_ADDRESS_CREATED).text.split(':')[1]
+        return full_name, email, current_address, permanent_address
+        
+        
