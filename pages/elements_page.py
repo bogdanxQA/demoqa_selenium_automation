@@ -3,11 +3,15 @@ from locators.check_box_page_locators import CheckBoxPageLocators
 from locators.radio_button_page_locators import RadioButtonPageLocators
 from locators.web_tables_page_locators import WebTablesPageLocators
 from locators.buttons_page_locators import ButtonsPageLocators
+from locators.links_page_locators import LinksPageLocators
 from pages.base_page import BasePage
 import time
 from data.genarator.genarator import person_genarated, data_genarated
 import random
 from selenium.webdriver.support.select import Select 
+import requests
+from selenium import webdriver
+
 
 
 
@@ -211,6 +215,34 @@ class ButtonsPage(BasePage):
 
     def checked_res_clicked_on_the_btn(self, element):
         return self.element_is_visible(element).text
+    
+class LinksPage(BasePage):
+    locators = LinksPageLocators()
+
+    def check_simple_link(self):
+        simple_link = self.element_is_visible(self.locators.SIMPLE_LINK)
+        link = simple_link.get_attribute('href')
+        request = requests.get(link)
+        if request.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link, url
+        else:
+            return link, request.status_code 
+        
+
+    def check_not_found_link(self):
+        request = requests.get("https://demoqa.com/invalid-url")
+        if request.status_code == 200:
+            self.element_is_present(self.locators.NOT_FOUND_LINK).click()
+        else:
+            return request.status_code
+
+
+  
+
+
 
     
 

@@ -1,4 +1,4 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage
 import time
 
 
@@ -129,6 +129,22 @@ class TestElements:
             page.open()
             msg = page.click_on_click_me_button()
             assert msg == "You have done a dynamic click"
+
+    class TestLinksPage:
+
+        def test_simple_link(self, driver):
+            page = LinksPage(driver, "https://demoqa.com/links")
+            page.open()
+            link, url = page.check_simple_link()
+            assert link == url, f"Статус код {url}"
+
+
+        def test_not_found_link(self, driver):
+            page = LinksPage(driver, "https://demoqa.com/links")
+            page.open()  
+            response_code = page.check_not_found_link()
+            assert response_code == 404
+
         
 
             
