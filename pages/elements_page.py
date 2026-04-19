@@ -4,12 +4,15 @@ from locators.radio_button_page_locators import RadioButtonPageLocators
 from locators.web_tables_page_locators import WebTablesPageLocators
 from locators.buttons_page_locators import ButtonsPageLocators
 from locators.links_page_locators import LinksPageLocators
+from locators.upload_and_download_page_locators import DownloadAndUploadPageLocators
+from locators.dynamic_prpetries_page_locators import DynamicPropertiesLocators
 from pages.base_page import BasePage
 import time
-from data.genarator.genarator import person_genarated, data_genarated
+from data.genarator.genarator import person_genarated, data_genarated, file_generated
 import random
 from selenium.webdriver.support.select import Select 
 import requests
+import os
 from selenium import webdriver
 
 
@@ -215,7 +218,7 @@ class ButtonsPage(BasePage):
 
     def checked_res_clicked_on_the_btn(self, element):
         return self.element_is_visible(element).text
-    
+"""Предположил, что нужно взять ссылку из запроса и сравнить с ожидаемым статус кодом. Возможно придется переделать. В целом коряво."""    
 class LinksPage(BasePage):
     locators = LinksPageLocators()
 
@@ -242,7 +245,42 @@ class LinksPage(BasePage):
 
   
 
+class DownloadAndUploadPage(BasePage):
+    locators = DownloadAndUploadPageLocators()
 
+
+    def download_file(self):
+        pass
+
+    """Генерируем файл, загружаем, удаляем, проверяем"""
+    def upload_file(self):
+        file_name, path = file_generated()
+        self.element_is_present(self.locators.UPLOAD_BTN).send_keys(path)
+        displayed_path = self.element_is_visible(self.locators.UPLOAD_PATH).text
+        os.remove(path)
+        assert file_name in displayed_path
+
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesLocators()
+
+    def click_to_will_enable_btn(self):
+        self.element_is_clickable(self.locators.WILL_ENABLE_BUTTON).click()
+
+    def click_to_visible_after_btn(self):
+        self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON).click()
+
+    """Чтобы не ставить time.sleep установил каунтер. Кнопка меняет цвет вместе с появлением другой кнопки"""
+    def check_color_change_btn(self):
+        element = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        element_before = element.value_of_css_property('color')
+        counter = self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON)
+        element_after = element.value_of_css_property('color')
+        return element_before, element_after
+        
+
+    def get_text_with_random_id(self):
+        element = self.element_is_visible(self.locators.RANDOM_ID_TEXT)
+        return element.text
 
     
 

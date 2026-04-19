@@ -10,6 +10,8 @@ class ButtonsPageLocators:                                                      
     RIGHT_CLICK_MSG = (By.CSS_SELECTOR, "#rightClickMessage")                           # //p[@id = 'rightClickMessage']  
     CLICK_ME_MSG = (By.CSS_SELECTOR, "#dynamicClickMessage")                            # //p[@id = 'dynamicClickMessage']
 
+    
+
 
 
 

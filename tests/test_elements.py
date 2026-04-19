@@ -1,4 +1,4 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, DownloadAndUploadPage, DynamicPropertiesPage
 import time
 
 
@@ -129,7 +129,7 @@ class TestElements:
             page.open()
             msg = page.click_on_click_me_button()
             assert msg == "You have done a dynamic click"
-
+    
     class TestLinksPage:
 
         def test_simple_link(self, driver):
@@ -144,6 +144,48 @@ class TestElements:
             page.open()  
             response_code = page.check_not_found_link()
             assert response_code == 404
+
+    
+    """Прочитать статью о том как автоматизировать скачивание файла"""
+    class TestUploadDownloadPage:
+
+        # def test_download(self, driver):
+        #     page = DownloadAndUploadPage(driver, "https://demoqa.com/upload-download")
+        #     page.open() 
+            
+
+        def test_upload(self, driver):
+            page = DownloadAndUploadPage(driver, "https://demoqa.com/upload-download")
+            page.open() 
+            page.upload_file()
+
+    class TestDynapicPropertiesPage:
+
+        def test_click_to_will_enable_btn(self, driver):
+            page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            page.open() 
+            page.click_to_will_enable_btn()
+
+        def test_click_to_visible_after_btn(self, driver):
+            page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            page.open() 
+            page.click_to_visible_after_btn()
+        
+        def test_check_color_change_btn(self, driver):
+            page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            page.open() 
+            element_before, element_after = page.check_color_change_btn()
+            assert element_before != element_after
+
+        def test_get_text_with_random_id(self, driver):
+            page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            page.open() 
+            res = page.get_text_with_random_id()
+            assert res == "This text has random Id"
+            
+            
+
+    
 
         
 

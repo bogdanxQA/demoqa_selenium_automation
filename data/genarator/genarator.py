@@ -1,5 +1,8 @@
 from data.data import Person, Data
 from faker import Faker
+import os
+import random
+from pathlib import Path
 
 faker = Faker('ru_Ru')
 Faker.seed()
@@ -26,3 +29,24 @@ def data_genarated():
         department = faker.text(max_nb_chars=25)
 
     )
+
+
+
+
+def get_project_root() -> Path:
+    """Возвращает корневую папку проекта (где лежат .gitignore или requirements.txt)."""
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if (parent / ".gitignore").exists() or (parent / "requirements.txt").exists():
+            return parent
+    return current  # если маркеры не найдены, вернуть текущую папку
+
+
+
+def file_generated():
+    data_dir = get_project_root() / "data"
+    data_dir.mkdir(exist_ok=True)
+    file_name = f"file{random.randint(0, 999)}.txt"
+    file_path = data_dir / file_name
+    file_path.write_text("Hi, I hope you have Windows.", encoding='utf-8')
+    return file_name, str(file_path)
