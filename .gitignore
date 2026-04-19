@@ -7,3 +7,5 @@ cookies/
 screenshots/
 downloads/
 *.pkl
+debug.py
+debug,py

@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 
 
@@ -10,9 +11,14 @@ class BasePage:
 
 
 
+
     def open(self):
         self.driver.get(self.url)
-
+        
+    def wait_element_stable(self, element, timeout=5):
+        WebDriverWait(self.driver, timeout).until(
+        lambda d: element.is_displayed() and element.size['width'] > 0 and element.size['height'] > 0
+        )
 
     def element_is_visible(self, locator, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
@@ -30,12 +36,19 @@ class BasePage:
     def elements_are_presents(self, locator, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))  
 
-
-
     def element_is_clickable(self, locator, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
     
     
+    def double_click(self, element):
+        action = ActionChains(self.driver)
+        action.double_click(element).move_to_element(element)
+        action.perform()
+
+    def right_click(self, element):
+        action = ActionChains(self.driver)
+        action.context_click(element)
+        action.perform()
     
 
     def scroll_to_element(self, element):

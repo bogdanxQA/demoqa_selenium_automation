@@ -2,11 +2,13 @@ from locators.text_box_page_locators import TextBoxPageLocators
 from locators.check_box_page_locators import CheckBoxPageLocators
 from locators.radio_button_page_locators import RadioButtonPageLocators
 from locators.web_tables_page_locators import WebTablesPageLocators
+from locators.buttons_page_locators import ButtonsPageLocators
 from pages.base_page import BasePage
 import time
 from data.genarator.genarator import person_genarated, data_genarated
 import random
 from selenium.webdriver.support.select import Select 
+
 
 
 class TextBoxPage(BasePage):
@@ -178,9 +180,42 @@ class WebTablesPage(BasePage):
     
     def select_show_value(self, value = 50):
             select_element = self.element_is_visible(self.locators.SHOW_ROWS_SELECT)
-            self.scroll_to_element(select_element)
+            #self.scroll_to_element(select_element)
             select = Select(select_element)
             select.select_by_value(str(value))
+
+
+"""Ничего не помогло кроме time.sleep() - не знаю что делать, оставлю костыль"""
+class ButtonsPage(BasePage):
+    locators = ButtonsPageLocators()
+
+    def double_click_on_btn(self):
+        time.sleep(0.1)
+        self.double_click(self.element_is_clickable(self.locators.DOUBLE_CLICK_BUTTON))
+        return self.checked_res_clicked_on_the_btn(self.locators.DOUBLE_CLICK_MSG)
+
+
+    def right_click_on_btn(self):
+        time.sleep(0.1)
+        self.right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
+        return self.checked_res_clicked_on_the_btn(self.locators.RIGHT_CLICK_MSG)
+    
+    def click_on_click_me_button(self):
+        time.sleep(0.1)
+        self.element_is_visible(self.locators.CLICK_ME_BUTTON).click()
+        return self.checked_res_clicked_on_the_btn(self.locators.CLICK_ME_MSG)
+
+
+    
+
+
+    def checked_res_clicked_on_the_btn(self, element):
+        return self.element_is_visible(element).text
+
+    
+
+
+
         
  
 

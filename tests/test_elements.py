@@ -1,4 +1,4 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage
 import time
 
 
@@ -106,11 +106,29 @@ class TestElements:
 
 
         #def можно добавить проверку пагинации, но необходимо много тестовых данных
-            
 
+    """В методе double_click_on_btn есть костыль. Не смог исправить"""
+    class TestButtonsPage:
+
+        def test_double_click_on_btn(self, driver):
+            page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            page.open()
+            msg = page.double_click_on_btn()
+            assert msg == "You have done a double click"
+            
+            
+        def test_right_click_on_btn(self, driver):
+            page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            page.open()
+            msg = page.right_click_on_btn()
+            assert msg == "You have done a right click"
             
                     
-
+        def test_click_on_click_me_btn(self, driver):
+            page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            page.open()
+            msg = page.click_on_click_me_button()
+            assert msg == "You have done a dynamic click"
         
 
             
