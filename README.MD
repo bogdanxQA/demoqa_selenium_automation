@@ -1,1 +1,130 @@
-empty
+## 📌 О проекте
+
+Этот проект создан в учебных целях для изучения автоматизации UI-тестирования с использованием Selenium WebDriver(+Pytest) на Python.  
+На текущем этапе реализован фреймворк для тестирования раздела Elements сайта demoqa.com.  
+Учебный проект находится в  разработке — в планах покрыть тестами остальные разделы (Forms, Alerts, Widgets, Interactions и т.д.).
+
+---
+
+## 🧱 Что уже автоматизировано (раздел Elements)
+
+| Страница | Что проверяется |
+|----------|----------------|
+| Text Box | Заполнение формы, отправка, проверка отображения введённых данных |
+| Check Box | Раскрытие всего дерева, выбор случайного чекбокса, проверка результата |
+| Radio Button | Выбор каждой радио-кнопки (Yes, Impressive) и проверка сообщения |
+| Web Tables | CRUD-операции: добавление, редактирование, удаление, поиск, пагинация |
+| Buttons | Двойной клик, правый клик, обычный клик с проверкой сообщения |
+| Links | Клик по всем ссылкам, проверка текста ответа (200, 201, 400 и др.), requests |
+| Upload and Download | Генерация файла, загрузка и проверка успешности |
+| Dynamic Properties | Ожидание изменений элементов (цвет, доступность, появление, работа с динамическим id) |
+
+---
+
+## 🏗 Структура проекта
+
+```text
+FINAL_PROJECT_SELENIUM/
+│
+├── data/                     # сгенерированные файлы (для загрузки)
+├── generator/                # генераторы тестовых данных (Faker)
+│   └── generator.py
+├── locators/                 # локаторы элементов
+├── pages/                    # Page Object классы
+├── tests/                    # тесты (pytest)
+├── .gitignore
+├── conftest.py               # фикстуры
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## 🛠 Технологии и инструменты
+
+| Компонент | Используемое решение |
+|----------|---------------------|
+| Язык | Python 3.11 |
+| Фреймворк тестирования | pytest |
+| Автоматизация браузера | Selenium WebDriver |
+| Управление драйверами | webdriver-manager |
+| Генерация данных | Faker |
+| Ожидания | WebDriverWait + expected_conditions |
+| Отчёты | Allure (еще не реализовано) |
+| Паттерн | Page Object Model (POM) |
+
+---
+
+## 🚀 Быстрый старт
+
+### 1. Клонирование репозитория
+
+```bash
+git clone https://github.com/bogdanxQA/FINAL_PROJECT_SELENIUM.git
+cd FINAL_PROJECT_SELENIUM
+```
+
+---
+
+### 2. Создание виртуального окружения
+
+```bash
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Linux/Mac
+```
+
+---
+
+### 3. Установка зависимостей
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4. Запуск всех тестов
+
+```bash
+pytest -v -s
+```
+
+---
+
+### 5. Запуск конкретного теста
+
+```bash
+pytest -k "TestWebTablesPage" -v -s
+pytest tests/test_elements.py::TestElements::TestWebTablesPage::test_add_new_data -v -s
+```
+
+---
+
+
+## 📊 Особенности реализации
+
+- Явные ожидания — используется WebDriverWait 
+- Уникальные селекторы — приоритет CSS, XPath только при необходимости  
+- Генерация данных — Faker (ru_RU)  
+- Работа с файлами — временные файлы в папке data/  
+- Устойчивость — поиск корня проекта по маркерам  
+
+---
+
+## 📈 Планы по развитию (Roadmap)
+
+- Forms (Practice Form)
+- Alerts, Frame & Windows
+- Widgets (Accordion, Slider и др.)
+- Interactions (Sortable, Droppable и др.)
+- Book Store Application
+- Интеграция Allure
+
+---
+
+## 📝 Примечания
+
+- Тесты написаны для браузера Google Chrome (используется ChromeDriverManager, который автоматически подбирает версию).  
+- Сайт может не стабильно работать с ру ip   
+- При падении тестов проверьте версию браузера и драйвера  

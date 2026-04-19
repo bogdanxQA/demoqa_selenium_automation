@@ -165,14 +165,14 @@ class TestElements:
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             is_enable = page.click_to_will_enable_btn()
-            assert is_enable == True
+            assert is_enable == True, "Кнопка не стала активной"
 
 
         def test_click_to_visible_after_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             is_visible = page.click_to_visible_after_btn()
-            assert is_visible == True
+            assert is_visible == True, "Кнопка не появилась спустя заданное время"
 
         
         def test_check_color_change_btn(self, driver):
