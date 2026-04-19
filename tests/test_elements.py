@@ -1,13 +1,6 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage
 import time
 
-
-"""Просто чекнул что ворк НУЖНО УДАЛИТЬ"""
-# def test_zhopa(driver):
-#     page = BasePage(driver=driver, url="https://demoqa.com/")
-#     page.open()
-#     time.sleep(5)
-""""""
 
 
 class TestElements:
@@ -38,13 +31,89 @@ class TestElements:
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
             radio_button_page.open()
             radio_button_page.click_to_radio_button_yes()
-            assert "Yes" in radio_button_page.get_displayed_selected_button()
+            assert "Yes" in radio_button_page.get_displayed_selected_button(), "Yes не отображается в выбранных"
 
-        def test_to_radio_button_impressive(self, driver):
+        def test_radio_button_impressive(self, driver):
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
             radio_button_page.open()
             radio_button_page.click_to_radio_button_impressive()
-            assert "Impressive" in radio_button_page.get_displayed_selected_button()
+            assert "Impressive" in radio_button_page.get_displayed_selected_button(), "Impressive не отображается в выбранных"
+
+        def test_radio_button_no(self, driver):
+            radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
+            radio_button_page.open()
+            radio_button_page.click_to_radio_button_no()
+            assert "No" in radio_button_page.get_displayed_selected_button(), "No не отображается в выбранных"
+
+    class TestWebTablesPage:
+        def test_add_new_data(self, driver):
+            web_tables_page = WebTablesPage(driver, "https://demoqa.com/webtables")
+            web_tables_page.open()
+            excepted_data = web_tables_page.add_new_data(count=1)
+            full_data = web_tables_page.get_full_data()
+            
+            for record in excepted_data:
+             assert record in full_data, f"Запись '{record}' не найдена в таблице"
+
+
+        def test_search_and_result(self, driver):
+            page = WebTablesPage(driver, "https://demoqa.com/webtables")
+            page.open()
+            name = page.add_new_data()[0].split()[0] 
+            excepted_data = page.search_box_clear_and_send_keys(send_keys=name)
+            displayed_data = page.get_full_data()
+            assert excepted_data in displayed_data[0], f"Ожидаемого значения {excepted_data} не обнаружено в отображенном результате {displayed_data[0]}"
+
+        
+        def test_update_data(self, driver):
+            page = WebTablesPage(driver, "https://demoqa.com/webtables")
+            page.open()
+            name = page.add_new_data()[0].split()[0] 
+            page.search_box_clear_and_send_keys(send_keys=name)
+            excepted_data = page.update_data()
+            displayed_data = page.get_full_data()[0]
+                        
+            for field, expected_value in excepted_data.items():
+                assert expected_value in displayed_data, f"Поле '{field}' со значением '{expected_value}' не обнаружено в отображенном результате: {displayed_data}"
+
+
+        def test_delete_data(self, driver):
+            page = WebTablesPage(driver, "https://demoqa.com/webtables")
+            page.open()
+            name = page.add_new_data()[0].split()[0] 
+            page.search_box_clear_and_send_keys(send_keys=name)
+            page.delete_data()
+            displayed_data = page.get_full_data_wo_wait()
+            assert displayed_data == [], f"После удаления данные остались в таблице: {displayed_data}"
+
+
+        
+        """Проверяем на максимальном селекте сколько отображается строк. Добиваем до 50-ти проверяем каждый селект (сколько отображает)"""        
+        def test_show_button(self,driver):
+            page = WebTablesPage(driver, "https://demoqa.com/webtables")
+            page.open()
+            page.select_show_value()
+            total_records = len(page.get_full_data())
+            if total_records < 50:
+                need = 50 - total_records
+                page.add_new_data(count=need)
+                total_records = len(page.get_full_data())
+
+            for value in [10, 20, 30, 40 ,50]:
+                page.select_show_value(value)
+                visible = len(page.get_full_data())
+                assert value == visible, f"При выборе 'Show {value}' ожидалось {value} строк, получено {visible}"
+
+
+        #def можно добавить проверку пагинации, но необходимо много тестовых данных
+            
+
+            
+                    
+
+        
+
+            
             
             
             
