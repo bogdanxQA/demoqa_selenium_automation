@@ -164,18 +164,22 @@ class TestElements:
         def test_click_to_will_enable_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
-            page.click_to_will_enable_btn()
+            is_enable = page.click_to_will_enable_btn()
+            assert is_enable == True
+
 
         def test_click_to_visible_after_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
-            page.click_to_visible_after_btn()
+            is_visible = page.click_to_visible_after_btn()
+            assert is_visible == True
+
         
         def test_check_color_change_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             element_before, element_after = page.check_color_change_btn()
-            assert element_before != element_after
+            assert element_before != element_after, f"Цвет элемента не изменился. {element_before}"
 
         def test_get_text_with_random_id(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")

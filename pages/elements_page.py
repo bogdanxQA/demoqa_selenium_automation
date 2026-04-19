@@ -264,10 +264,19 @@ class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesLocators()
 
     def click_to_will_enable_btn(self):
-        self.element_is_clickable(self.locators.WILL_ENABLE_BUTTON).click()
+        try:
+            self.element_is_clickable(self.locators.WILL_ENABLE_BUTTON).click()
+        except:
+            return False
+        return True
 
     def click_to_visible_after_btn(self):
-        self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON).click()
+        try:
+            self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON).click()
+        except:
+            return False
+        return True
+        
 
     """Чтобы не ставить time.sleep установил каунтер. Кнопка меняет цвет вместе с появлением другой кнопки"""
     def check_color_change_btn(self):
