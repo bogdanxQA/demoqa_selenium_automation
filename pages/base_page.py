@@ -1,7 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium import webdriver
+
 
 
 class BasePage:
@@ -38,6 +38,9 @@ class BasePage:
 
     def element_is_clickable(self, locator, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+    
+    def value_in_element_is_present(self, locator, value, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element_value(locator, value))
     
     
     def double_click(self, element):

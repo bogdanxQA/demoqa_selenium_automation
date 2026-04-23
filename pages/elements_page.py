@@ -8,12 +8,12 @@ from locators.upload_and_download_page_locators import DownloadAndUploadPageLoca
 from locators.dynamic_prpetries_page_locators import DynamicPropertiesLocators
 from pages.base_page import BasePage
 import time
-from data.genarator.genarator import person_genarated, data_genarated, file_generated
+from data.generator.generator import person_genarated, data_genarated, file_generated
 import random
 from selenium.webdriver.support.select import Select 
 import requests
 import os
-from selenium import webdriver
+
 
 
 

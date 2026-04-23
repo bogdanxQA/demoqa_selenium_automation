@@ -1,4 +1,4 @@
-from data.data import Person, Data
+from data.data import Person, Data, PracticeFormData
 from faker import Faker
 import os
 import random
@@ -50,3 +50,15 @@ def file_generated():
     file_path = data_dir / file_name
     file_path.write_text("Hi, I hope you have Windows.", encoding='utf-8')
     return file_name, str(file_path)
+
+
+def practice_form_data_generated():
+    yield PracticeFormData(
+        first_name = faker.first_name(),
+        last_name = faker.last_name(),
+        email = faker.email(),
+        mobile_number = faker.numerify(text='##########'),
+        current_address = faker.street_address()
+        
+
+    )
