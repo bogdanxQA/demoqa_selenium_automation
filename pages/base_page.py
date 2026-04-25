@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import TimeoutException
 
 
 
@@ -45,6 +46,19 @@ class BasePage:
     # def text_contains_in_element(self, locator, substring, timeout=10):
     #     print(f"Ожидание текста '{substring}' в элементе {locator}, таймаут {timeout} сек")
     #     return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, substring))
+
+    def wait_for_alert(self, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+    
+    def is_alert_closed(self, timeout=1):
+
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+            return False
+        except TimeoutException:
+            return True
+        
+
     
     
     def double_click(self, element):

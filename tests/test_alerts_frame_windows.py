@@ -1,4 +1,6 @@
-from pages.alerts_frame_windows_page import BrowserWindowsPage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage
+import pytest
+
 
 
 
@@ -23,6 +25,58 @@ class TestAlertsFrameWindows:
             page.switch_to_new_tab()
             displayed_text = page.get_text_from_sample_page()
             assert "This is a sample page" == displayed_text, "Новое окно не было открыто, либо открыто не верное окно"
+
+
+    class TestAlerts:
+
+        def test_alert_button(self, driver):
+            page = AlertsPage(driver, "https://demoqa.com/alerts")
+            page.open()
+            page.click_to_alert_button()
+            page.accept_alert()
+            assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
+
+        def test_alert_after_time_button(self, driver):
+            page = AlertsPage(driver, "https://demoqa.com/alerts")
+            page.open()
+            page.click_to_alert_after_time_button()
+            page.accept_alert()
+            assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
+
+        
+        @pytest.mark.parametrize("action, expected", [
+            ("accept", "You selected Ok"),
+            ("dismiss", "You selected Cancel")
+        ])
+        def test_confirm_box_button(self, driver, action, expected):
+            page = AlertsPage(driver, "https://demoqa.com/alerts")
+            page.open()
+            page.click_to_confirm_box_button()
+            if action == "accept":
+                page.accept_alert()
+                
+            else:
+                page.dismiss_alert()
+
+            result = page.get_result_from_confirm_box()
+            assert page.is_alert_closed(), "Alert не был закрыт после его принятия или отклонения"
+            assert result == expected, f"После нажатия на {action} ожидался текст: {expected}.\n Полученный текст: {result}"
+
+
+        def test_prompt_box_button(self, driver):
+            page = AlertsPage(driver, "https://demoqa.com/alerts")
+            page.open()
+            page.click_to_prompt_box_button()
+            expected_value = page.input_random_text_into_alert()
+            page.accept_alert()
+            displayed_value = page.get_result_from_prompt_box()
+            assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
+            assert expected_value in displayed_value, f"Введенный текст в алерт: {expected_value} не найдет в отображаемом результате: {displayed_value}"
+            
+
+
+
+            
 
 
         
