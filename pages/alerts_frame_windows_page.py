@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from locators.browser_windows_page_locators import BrowserWindowsPageLocators
 from locators.alerts_page_locators import AlertsPageLocators
 from locators.modal_dialogs_page_locators import ModalDialogsPageLocators
+from locators.frames_page_locators import FramesPageLocators
 from data.generator.generator import data_genarated
 
 
@@ -92,6 +93,28 @@ class ModalDialogsPage(BasePage):
 
     def is_modal_closed(self):
         return self.wait_for_element_to_disappear(self.locators.MODAL)
+    
+
+class FramesPage(BasePage):
+
+    locators = FramesPageLocators()
+
+    def get_data_from_first_frame(self):
+        element = self.element_is_present(self.locators.FIRST_FRAME)
+        width = element.get_attribute("width")
+        height = element.get_attribute("height")
+        self.driver.switch_to.frame(element)
+        text = self.element_is_present(self.locators.FRAME_TITLE).text
+        return [text, width, height]
+    
+    def get_data_from_second_frame(self):
+        element = self.element_is_present(self.locators.SECOND_FRAME)
+        width = element.get_attribute("width")
+        height = element.get_attribute("height")
+        self.driver.switch_to.frame(element)
+        text = self.element_is_present(self.locators.FRAME_TITLE).text
+        return [text, width, height]
+
         
 
     

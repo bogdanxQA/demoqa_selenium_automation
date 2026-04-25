@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-class DynamicPropertiesLocators:
+class DynamicPropertiesPageLocators:
                                                                         #xpath:
     WILL_ENABLE_BUTTON = (By.CSS_SELECTOR, "#enableAfter")              # //button[@id='enableAfter']
     VISIBLE_AFTER_BUTTON = (By.CSS_SELECTOR, "#visibleAfter")           # //button[@id='visibleAfter']  

@@ -5,7 +5,7 @@ from locators.web_tables_page_locators import WebTablesPageLocators
 from locators.buttons_page_locators import ButtonsPageLocators
 from locators.links_page_locators import LinksPageLocators
 from locators.upload_and_download_page_locators import DownloadAndUploadPageLocators
-from locators.dynamic_prpetries_page_locators import DynamicPropertiesLocators
+from locators.dynamic_prpetries_page_locators import DynamicPropertiesPageLocators
 from pages.base_page import BasePage
 import time
 from data.generator.generator import person_genarated, data_genarated, file_generated
@@ -261,7 +261,7 @@ class DownloadAndUploadPage(BasePage):
         assert file_name in displayed_path
 
 class DynamicPropertiesPage(BasePage):
-    locators = DynamicPropertiesLocators()
+    locators = DynamicPropertiesPageLocators()
 
     def click_to_will_enable_btn(self):
         try:

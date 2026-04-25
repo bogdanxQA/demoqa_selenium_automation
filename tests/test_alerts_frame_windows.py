@@ -1,4 +1,4 @@
-from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage, FramesPage
 import pytest
 
 
@@ -91,6 +91,24 @@ class TestAlertsFrameWindows:
             page.click_to_large_modal_button()
             page.click_to_close_large_modal()
             assert page.is_modal_closed() == True, "Не удалось закрыть модальное окно"
+
+    class TestFrames:
+
+        def test_first_frame(self,driver):
+            page = FramesPage(driver, "https://demoqa.com/frames")
+            page.open()
+            result = page.get_data_from_first_frame()
+            excepted = ['This is a sample page', "500px", "350px"]
+            print(result)
+            assert excepted == result, f"Фрейм не существует или был изменен"
+
+        def test_second_frame(self,driver):
+            page = FramesPage(driver, "https://demoqa.com/frames")
+            page.open()
+            result = page.get_data_from_second_frame()
+            excepted = ['This is a sample page', "100px", "100px"]
+            print(result)
+            assert excepted == result, f"Фрейм не существует или был изменен"
         
             
 
