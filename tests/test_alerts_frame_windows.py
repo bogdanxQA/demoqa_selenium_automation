@@ -1,5 +1,6 @@
-from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage
 import pytest
+
 
 
 
@@ -72,6 +73,25 @@ class TestAlertsFrameWindows:
             displayed_value = page.get_result_from_prompt_box()
             assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
             assert expected_value in displayed_value, f"Введенный текст в алерт: {expected_value} не найдет в отображаемом результате: {displayed_value}"
+
+
+    class TestModalDialogs:
+
+        def test_small_modal(self, driver):
+            page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
+            page.open()
+            page.click_to_small_modal_button()
+            page.click_to_close_small_modal()
+            assert page.is_modal_closed() == True, "Не удалось закрыть модальное окно"
+
+
+        def test_large_modal(self, driver):
+            page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
+            page.open()
+            page.click_to_large_modal_button()
+            page.click_to_close_large_modal()
+            assert page.is_modal_closed() == True, "Не удалось закрыть модальное окно"
+        
             
 
 

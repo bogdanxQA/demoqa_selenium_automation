@@ -1,6 +1,7 @@
 from pages.base_page import BasePage
 from locators.browser_windows_page_locators import BrowserWindowsPageLocators
 from locators.alerts_page_locators import AlertsPageLocators
+from locators.modal_dialogs_page_locators import ModalDialogsPageLocators
 from data.generator.generator import data_genarated
 
 
@@ -68,6 +69,32 @@ class AlertsPage(BasePage):
     def get_result_from_prompt_box(self):
         result = self.element_is_present(self.locators.RESULT_PROMPT_BUTTON).text
         return result
+    
+class ModalDialogsPage(BasePage):
+
+    locators = ModalDialogsPageLocators()
+
+    def click_to_small_modal_button(self):
+        element = self.element_is_visible(self.locators.SMALL_MODAL_BUTTON)
+        element.click()
+
+    def click_to_large_modal_button(self):
+        element = self.element_is_visible(self.locators.LARGE_MODAL_BUTTON)
+        element.click()
+    
+    def click_to_close_small_modal(self):
+        element = self.element_is_present(self.locators.CLOSE_SMALL_MODAL_BUTTON)
+        element.click()
+
+    def click_to_close_large_modal(self):
+        element = self.element_is_present(self.locators.CLOSE_LARGE_MODAL_BUTTON)
+        element.click()
+
+    def is_modal_closed(self):
+        return self.wait_for_element_to_disappear(self.locators.MODAL)
+        
+
+    
 
 
 

@@ -58,6 +58,14 @@ class BasePage:
         except TimeoutException:
             return True
         
+    """Ждёт, пока элемент, заданный локатором, станет невидимым или исчезнет из DOM"""
+    def wait_for_element_to_disappear(self, locator, timeout=5):
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(locator))
+            return True
+        except TimeoutException:
+            return False
+        
 
     
     
