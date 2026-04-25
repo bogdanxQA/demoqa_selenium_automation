@@ -42,6 +42,10 @@ class BasePage:
     def value_in_element_is_present(self, locator, value, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element_value(locator, value))
     
+    # def text_contains_in_element(self, locator, substring, timeout=10):
+    #     print(f"Ожидание текста '{substring}' в элементе {locator}, таймаут {timeout} сек")
+    #     return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, substring))
+    
     
     def double_click(self, element):
         action = ActionChains(self.driver)
@@ -56,6 +60,9 @@ class BasePage:
 
     def scroll_to_element(self, element):
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    def tab_or_window_is_opened(self, count, timeout = 5):
+        return WebDriverWait(self.driver, timeout).until(EC.number_of_windows_to_be(count))
 
         
 

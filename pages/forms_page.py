@@ -39,11 +39,7 @@ class PracticeFormPage(BasePage):
         random_gender_element.click()
      
         
-         
-        self.element_is_visible(self.locators.MOBILE_NUMBER).send_keys(mobile_number) 
-
-
-
+                 
         """Выбор рандомных чекбоксов + return label"""
         check_box_locators = [
              (self.locators.SPORTS_CHECKBOX, "Sports"),
