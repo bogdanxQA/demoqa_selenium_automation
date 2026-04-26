@@ -6,7 +6,7 @@ import time
 class TestElements:
     class TestTextBoxPage:
         def test_text_box(self, driver):
-            page = TextBoxPage(driver=driver, url="https://demoqa.com/text-box")
+            page = TextBoxPage(driver, url="https://demoqa.com/text-box")
             page.open()
             full_name, email, current_address, permanent_address = page.fill_all_inputs()
             created_full_name, created_email, created_current_address, created_permanent_address = page.check_created_form()

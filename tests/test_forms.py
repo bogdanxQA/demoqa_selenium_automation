@@ -1,7 +1,6 @@
 from pages.forms_page import PracticeFormPage
 import pytest
 
-import time
 
 class TestForms():
     class TestPracticeFormPage:
