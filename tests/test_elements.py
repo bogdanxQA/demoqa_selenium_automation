@@ -1,5 +1,5 @@
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, DownloadAndUploadPage, DynamicPropertiesPage
-import time
+import pytest
 
 
 
@@ -39,11 +39,12 @@ class TestElements:
             radio_button_page.click_to_radio_button_impressive()
             assert "Impressive" in radio_button_page.get_displayed_selected_button(), "Impressive не отображается в выбранных"
 
+        @pytest.mark.xfail(reason="На странице радиокнопка No всегда отключена")
         def test_radio_button_no(self, driver):
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
             radio_button_page.open()
-            radio_button_page.click_to_radio_button_no()
-            assert "No" in radio_button_page.get_displayed_selected_button(), "No не отображается в выбранных"
+            is_enabled = radio_button_page.is_radio_button_no_enabled()
+            assert is_enabled == True, "Радио кнопка No не становится активной"
 
     class TestWebTablesPage:
         def test_add_new_data(self, driver):

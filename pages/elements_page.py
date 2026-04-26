@@ -64,14 +64,17 @@ class CheckBoxPage(BasePage):
         elements  = self.elements_are_presents(self.locators.aria_checked)
         lables = []
         for element in elements:
-            lables.append(element.get_attribute('aria-label').split()[1].lower()) 
+            aria = element.get_attribute('aria-label')
+            clean = aria.replace('Select ', '').split('.')[0].replace(' ', '').lower()
+            lables.append(clean)
         return lables    
     
     def get_displayed_selected_values(self):
         elements = self.elements_are_presents(self.locators.text_success)
         values = []
         for element in elements:
-            values.append(element.text) 
+            text = element.text.replace(' ', '').lower()
+            values.append(text) 
         return values 
     
 class RadioButtonPage(BasePage):
@@ -86,9 +89,9 @@ class RadioButtonPage(BasePage):
         element = self.element_is_present(self.locators.IMPRESSIVE_RADIO)
         element.click() 
 
-    def click_to_radio_button_no(self):
+    def is_radio_button_no_enabled(self):
         element = self.element_is_present(self.locators.NO_RADIO)
-        element.click()  
+        return element.is_enabled()
 
     def get_displayed_selected_button(self):
         return self.element_is_present(self.locators.TEXT_SUCCSESS).text
