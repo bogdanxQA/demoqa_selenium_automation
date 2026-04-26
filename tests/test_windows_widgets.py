@@ -1,4 +1,4 @@
-from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage
+from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage
 import pytest
 
 class TestWindowsWidgets:
@@ -42,7 +42,7 @@ class TestWindowsWidgets:
             page = DatePickerPage(driver, url="https://demoqa.com/date-picker")
             page.open()
             displayed_date, day, month, year = page.select_date()
-            assert f"{month:02d}/{day}/{year}" == displayed_date, "Неверное отображение выбранной даты или формат даты был изменен"
+            assert f"{month:02d}/{int(day):02d}/{year}" == displayed_date, "Неверное отображение выбранной даты или формат даты был изменен"
             
 
         def test_select_date_and_time(self, driver):
@@ -50,7 +50,30 @@ class TestWindowsWidgets:
             page.open()
             expected_date, displayed_date  = page.select_data_and_time()
             assert displayed_date == expected_date, "Выбранные дата и время не совпадают с отображаемыми"
-            
+
+    class TestSliderPage:
+
+        def test_slider(self, driver):
+            page = SliderPage(driver, "https://demoqa.com/slider")
+            page.open()
+            value_before, value_after = page.move_slider()
+            assert value_after != value_before, "Слайдер не двигается или значение не изменилось"
+
+    class TestProgressBarPage:
+
+        def test_progress_bar(self, driver):
+            page = ProgressBarPage(driver, "https://demoqa.com/progress-bar")
+            page.open()
+            after, before = page.start_stop_progress_bar()
+            assert after != before, f"Progress bar не изменился: начальное значение {before}, конечное {after}"
+
+        def test_progress_bar_reset(self, driver):
+            page = ProgressBarPage(driver, "https://demoqa.com/progress-bar")
+            page.open()
+            after, before = page.reset_full_progress_bar()
+            assert after == before, f"Progress bar не был сброшен: начальное значение {before}, конечное {after}"
+
+
 
             
             

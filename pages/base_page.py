@@ -44,7 +44,7 @@ class BasePage:
     def value_in_element_is_present(self, locator, value, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element_value(locator, value))
     
-    def text_in_element_is_present(self, locator, value, timeout=5):
+    def text_in_element_is_present(self, locator, value, timeout=15):
         return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, value))
     
     def wait_for_element_text_in_list(self, locator, text:str, timeout = 5):
@@ -82,13 +82,13 @@ class BasePage:
         element = self.element_is_present(locator, timeout)
         select = Select(element)
         select.select_by_visible_text(text)
+
+    def drag_and_drop_by_offset(self, element, x, y):
+        action = ActionChains(self.driver)
+        action.drag_and_drop_by_offset(element, x, y)
+        action.perform()
         
 
-    
-        
-
-    
-    
     def double_click(self, element):
         action = ActionChains(self.driver)
         action.double_click(element).move_to_element(element)

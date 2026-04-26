@@ -2,6 +2,8 @@ from pages.base_page import BasePage
 from locators.accordian_page_locators import AccodrianPageLocators
 from locators.auto_complete_page_locators import AutoCompletePageLocators
 from locators.date_picker_page_locators import DatePickerPageLocators
+from locators.slider_page_locators import SliderPageLocators
+from locators.progress_bar_page_locators import ProgressBarPageLocators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -10,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 import random
 from data.generator.generator import date_generated
 from datetime import datetime
+import time
 
 
 
@@ -133,6 +136,57 @@ class DatePickerPage(BasePage):
         our_dt = datetime.strptime(f"{date.month} {date.day}, {date.year_short} {date.time}", "%B %d, %Y %H:%M")
         displayed_dt = datetime.strptime(displayed_date_and_time, "%B %d, %Y %I:%M %p")
         return our_dt, displayed_dt
+    
+class SliderPage(BasePage):
+
+    locators = SliderPageLocators()
+
+    def move_slider(self):
+        slider = self.element_is_visible(self.locators.SLIDER)
+        self.scroll_to_element(slider)
+        value_before = slider.get_attribute("value")
+        time.sleep(0.1)
+        self.drag_and_drop_by_offset(slider, random.randint(26, 100), 0)
+        value_after = slider.get_attribute("value")
+        return value_before, value_after
+    
+
+class ProgressBarPage(BasePage):
+
+    locators = ProgressBarPageLocators
+
+    def start_stop_progress_bar(self):
+        before = self.element_is_present(self.locators.PROGRESS_BAR).text
+        start_stop = self.element_is_visible(self.locators.START_STOP_BUTTON)
+        start_stop.click()
+        time.sleep(random.uniform(1, 6))  
+        start_stop.click()
+        after = self.element_is_present(self.locators.PROGRESS_BAR).text
+        return after, before
+    
+    def reset_full_progress_bar(self):
+        before = self.element_is_present(self.locators.PROGRESS_BAR).text
+        start_stop = self.element_is_visible(self.locators.START_STOP_BUTTON)
+        start_stop.click()
+        self.text_in_element_is_present(self.locators.PROGRESS_BAR, "100%", timeout=10)
+        reset = self.element_is_visible(self.locators.RESET_BUTTON, timeout=12)
+        reset.click()
+        self.text_in_element_is_present(self.locators.PROGRESS_BAR, "0%", timeout=10)
+        time.sleep(0.5)
+        after = self.element_is_present(self.locators.PROGRESS_BAR).text
+        return after, before
+    
+
+
+
+
+ 
+
+            
+
+
+
+
 
         
 
