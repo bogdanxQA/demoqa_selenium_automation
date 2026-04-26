@@ -1,4 +1,4 @@
-from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage, FramesPage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage, FramesPage, NestedFramesPage
 import pytest
 
 
@@ -100,7 +100,7 @@ class TestAlertsFrameWindows:
             result = page.get_data_from_first_frame()
             excepted = ['This is a sample page', "500px", "350px"]
             print(result)
-            assert excepted == result, f"Фрейм не существует или был изменен"
+            assert excepted == result, "Фрейм не существует или был изменен"
 
         def test_second_frame(self,driver):
             page = FramesPage(driver, "https://demoqa.com/frames")
@@ -108,7 +108,25 @@ class TestAlertsFrameWindows:
             result = page.get_data_from_second_frame()
             excepted = ['This is a sample page', "100px", "100px"]
             print(result)
-            assert excepted == result, f"Фрейм не существует или был изменен"
+            assert excepted == result, "Фрейм не существует или был изменен"
+
+    class TestNestedFrames:
+
+        def test_parent_frame(self, driver):
+            page = NestedFramesPage(driver, "https://demoqa.com/nestedframes")
+            page.open()
+            result = page.switch_to_parent_frame()
+            assert result == "Parent frame", "Фрейм не существует или был изменен"
+            
+
+        def test_child_frame(self, driver):
+            page = NestedFramesPage(driver, "https://demoqa.com/nestedframes")
+            page.open()
+            page.switch_to_parent_frame()
+            result = page.switch_to_child_frame()
+            assert result == "Child Iframe", "Фрейм не существует или был изменен"
+            
+            
         
             
 

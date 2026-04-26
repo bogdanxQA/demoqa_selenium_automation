@@ -5,7 +5,7 @@ from locators.web_tables_page_locators import WebTablesPageLocators
 from locators.buttons_page_locators import ButtonsPageLocators
 from locators.links_page_locators import LinksPageLocators
 from locators.upload_and_download_page_locators import DownloadAndUploadPageLocators
-from locators.dynamic_prpetries_page_locators import DynamicPropertiesPageLocators
+from locators.dynamic_propetries_page_locators import DynamicPropertiesPageLocators
 from pages.base_page import BasePage
 import time
 from data.generator.generator import person_genarated, data_genarated, file_generated
@@ -282,7 +282,7 @@ class DynamicPropertiesPage(BasePage):
     def check_color_change_btn(self):
         element = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
         element_before = element.value_of_css_property('color')
-        counter = self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON)
+        self.element_is_visible(self.locators.VISIBLE_AFTER_BUTTON)
         element_after = element.value_of_css_property('color')
         return element_before, element_after
         

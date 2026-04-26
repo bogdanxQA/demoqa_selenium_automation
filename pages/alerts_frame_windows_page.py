@@ -3,6 +3,7 @@ from locators.browser_windows_page_locators import BrowserWindowsPageLocators
 from locators.alerts_page_locators import AlertsPageLocators
 from locators.modal_dialogs_page_locators import ModalDialogsPageLocators
 from locators.frames_page_locators import FramesPageLocators
+from locators.nested_frames_page_locators import NestedFramesPageLocators
 from data.generator.generator import data_genarated
 
 
@@ -114,6 +115,23 @@ class FramesPage(BasePage):
         self.driver.switch_to.frame(element)
         text = self.element_is_present(self.locators.FRAME_TITLE).text
         return [text, width, height]
+    
+
+class NestedFramesPage(BasePage):
+
+    locators = NestedFramesPageLocators()
+
+    def switch_to_parent_frame(self):
+        element = self.element_is_present(self.locators.PARENT_FRAME)
+        self.driver.switch_to.frame(element)
+        text = self.element_is_present(self.locators.FRAME_TEXT).text
+        return text.strip()
+    
+    def switch_to_child_frame(self):
+        element = self.element_is_present(self.locators.CHILD_FRAME)
+        self.driver.switch_to.frame(element)
+        text = self.element_is_present(self.locators.FRAME_TEXT).text
+        return text.strip()
 
         
 

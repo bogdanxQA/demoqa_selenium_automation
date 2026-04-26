@@ -9,4 +9,9 @@ class AlertsPageLocators:                                                       
     RESULT_CONFIRM_BUTTON = (By.CSS_SELECTOR, "#confirmResult")                 # //span[@id='confirmResult']    
     RESULT_PROMPT_BUTTON = (By.CSS_SELECTOR, "#promptResult")                   # //span[@id='promptResult']   
 
+
+
+
+
+
     
