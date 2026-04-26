@@ -22,6 +22,7 @@ class PracticeFormPageLocators:
     SELECTOR_CITY_INPUT = (By.CSS_SELECTOR, "#react-select-4-input")
     STATE_AND_CITY_TEXT = (By.CSS_SELECTOR, "div[class='css-1dimb5e-singleValue']")
     SUBMIT_BUTTON = (By.CSS_SELECTOR, "#submit")                                    # //button[@id='submit']
+    SUBJECTS_AUTO_COMPLETE = (By.CSS_SELECTOR, ".subjects-auto-complete__menu-list")
     
 
 

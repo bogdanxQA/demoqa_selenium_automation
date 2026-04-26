@@ -35,4 +35,6 @@ SUBJECTS_LIST = [
         "Computer Science", "Commerce", "Accounting", "Economics",
         "Arts", "Social Studies", "History", "Civics"
 ]
+
+COLORS = ["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
        

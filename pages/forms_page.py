@@ -98,6 +98,7 @@ class PracticeFormPage(BasePage):
             element.send_keys(i)
             
             self.value_in_element_is_present(self.locators.SUBJECTS, value=i)
+            self.element_is_present(self.locators.SUBJECTS_AUTO_COMPLETE)
             
             element.send_keys(Keys.ENTER)
 

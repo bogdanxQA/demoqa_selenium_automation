@@ -1,4 +1,4 @@
-from pages.windows_widgets_page import AccordianPage
+from pages.windows_widgets_page import AccordianPage, AutoCompletePage
 import pytest
 
 class TestWindowsWidgets:
@@ -18,4 +18,25 @@ class TestWindowsWidgets:
             assert title == expected_title
             assert len(content) > 0
             assert is_opened == 'false'
+
+
+    class TestAutoCompletePage:
+
+        def test_multiple_input(self,driver):
+            page = AutoCompletePage(driver, url="https://demoqa.com/auto-complete")
+            page.open()
+            expected_value = page.random_fill_multiple_input()
+            displayed_value = page.get_data_from_multiple_input()
+            assert sorted(expected_value) == sorted(displayed_value), f"Расхождение в цветах.\nЛишние: {set(displayed_value) - set(expected_value)}\nНе хватает: {set(expected_value) - set(displayed_value)}"
+
+        def test_single_input(self, driver):
+            page = AutoCompletePage(driver, url="https://demoqa.com/auto-complete")
+            page.open()
+            expected_value = page.random_fill_single_input()
+            displayed_value = page.get_data_from_single_input()
+            assert expected_value == displayed_value
+
+            
+
+
             
