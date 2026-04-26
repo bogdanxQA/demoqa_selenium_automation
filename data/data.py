@@ -28,6 +28,14 @@ class PracticeFormData():
     mobile_number : str = None
     current_address : str = None
 
+@dataclass
+class Date:
+    day : str = None
+    month : str = None
+    year : str = None
+    time : str = None
+    year_short : str = None
+
 
 
 SUBJECTS_LIST = [

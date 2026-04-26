@@ -1,12 +1,15 @@
 from pages.base_page import BasePage
 from locators.accordian_page_locators import AccodrianPageLocators
 from locators.auto_complete_page_locators import AutoCompletePageLocators
+from locators.date_picker_page_locators import DatePickerPageLocators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from data.data import COLORS
 from selenium.webdriver.common.keys import Keys
 import random
+from data.generator.generator import date_generated
+from datetime import datetime
 
 
 
@@ -60,7 +63,7 @@ class AutoCompletePage(BasePage):
 
     locators = AutoCompletePageLocators()
     
-    def random_fill_multiple_input(self):
+    def pyrandom_fill_multiple_input(self):
 
         k = random.randint(1, len(COLORS))
 
@@ -97,6 +100,51 @@ class AutoCompletePage(BasePage):
     def get_data_from_single_input(self):
         displayed_value = self.element_is_present(self.locators.SINGLE_RESULT).text
         return displayed_value
+
+class DatePickerPage(BasePage):
+
+    locators = DatePickerPageLocators()
+
+    def select_date(self):
+        date = next(date_generated())
+        input_date = self.element_is_visible(self.locators.SELECT_DATE_INPUT)
+        input_date.click()
+        self.select_by_text(self.locators.SELECT_MONTH, date.month)
+        self.select_by_text(self.locators.SELECT_YEAR, date.year)
+        element = self.wait_for_element_text_in_list(self.locators.SELECT_DAY, date.day)
+        # real_date = element.get_attribute("aria-label")
+        element.click()
+        date_after = input_date.get_attribute("value")
+        month_num = datetime.strptime(date.month, "%B").month
+        return date_after, date.day, month_num, date.year
+    
+
+    def select_data_and_time(self):
+        date = next(date_generated())
+        input_date = self.element_is_visible(self.locators.SELECT_DATE_TIME_INPUT)
+        input_date.click()
+        self.element_is_visible(self.locators.SELECT_MONTH_DATE_TIME).click()
+        self.wait_for_element_text_in_list(self.locators.MONTH_DROPDOWN, date.month).click()
+        self.element_is_visible(self.locators.SELECT_YEAR_DATE_TIME).click()
+        self.wait_for_element_text_in_list(self.locators.YEAR_DROPDOWN, date.year_short).click()
+        self.wait_for_element_text_in_list(self.locators.SELECT_DAY, date.day).click()
+        self.wait_for_element_text_in_list(self.locators.SELECT_TIME, date.time).click()
+        displayed_date_and_time = input_date.get_attribute("value")
+        our_dt = datetime.strptime(f"{date.month} {date.day}, {date.year_short} {date.time}", "%B %d, %Y %H:%M")
+        displayed_dt = datetime.strptime(displayed_date_and_time, "%B %d, %Y %I:%M %p")
+        return our_dt, displayed_dt
+
+        
+
+        
+        
+
+
+    
+
+    
+    
+
 
     
 

@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import Select
 
 
 
@@ -43,6 +44,17 @@ class BasePage:
     def value_in_element_is_present(self, locator, value, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element_value(locator, value))
     
+    def text_in_element_is_present(self, locator, value, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, value))
+    
+    def wait_for_element_text_in_list(self, locator, text:str, timeout = 5):
+        elements = self.elements_are_presents(locator, timeout)
+        expected = text
+        for element in elements:
+            if element.text == expected:
+                return element
+        raise TimeoutException(f"Элемент с текстом '{expected}' не найден среди заданных локаторов")
+    
     # def text_contains_in_element(self, locator, substring, timeout=10):
     #     print(f"Ожидание текста '{substring}' в элементе {locator}, таймаут {timeout} сек")
     #     return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, substring))
@@ -66,6 +78,12 @@ class BasePage:
         except TimeoutException:
             return False
         
+    def select_by_text(self, locator, text:str, timeout:int = 10):
+        element = self.element_is_present(locator, timeout)
+        select = Select(element)
+        select.select_by_visible_text(text)
+        
+
     
         
 

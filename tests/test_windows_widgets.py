@@ -1,4 +1,4 @@
-from pages.windows_widgets_page import AccordianPage, AutoCompletePage
+from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage
 import pytest
 
 class TestWindowsWidgets:
@@ -35,6 +35,26 @@ class TestWindowsWidgets:
             expected_value = page.random_fill_single_input()
             displayed_value = page.get_data_from_single_input()
             assert expected_value == displayed_value
+
+    class TestDatePickerPage:
+
+        def test_select_date(self, driver):
+            page = DatePickerPage(driver, url="https://demoqa.com/date-picker")
+            page.open()
+            displayed_date, day, month, year = page.select_date()
+            assert f"{month:02d}/{day}/{year}" == displayed_date, "Неверное отображение выбранной даты или формат даты был изменен"
+            
+
+        def test_select_date_and_time(self, driver):
+            page = DatePickerPage(driver, url="https://demoqa.com/date-picker")
+            page.open()
+            expected_date, displayed_date  = page.select_data_and_time()
+            assert displayed_date == expected_date, "Выбранные дата и время не совпадают с отображаемыми"
+            
+
+            
+            
+
 
             
 

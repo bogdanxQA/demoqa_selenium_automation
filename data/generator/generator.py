@@ -1,10 +1,11 @@
-from data.data import Person, Data, PracticeFormData
+from data.data import Person, Data, PracticeFormData, Date
 from faker import Faker
 import os
 import random
 from pathlib import Path
 
 faker = Faker('ru_Ru')
+fake_en = Faker('EN')
 Faker.seed()
 
 def person_genarated():
@@ -59,6 +60,21 @@ def practice_form_data_generated():
         email = faker.email(),
         mobile_number = faker.numerify(text='##########'),
         current_address = faker.street_address()
-        
 
+ 
+    )
+
+def random_time_15min():
+    minutes = random.randrange(0, 24 * 60, 15)  # шаг 15 минут
+    hours = minutes // 60
+    mins = minutes % 60
+    return f"{hours:02d}:{mins:02d}"
+
+def date_generated():
+    yield Date(
+        year = fake_en.year(),
+        month = fake_en.month_name(),
+        day = str(int(fake_en.day_of_month())),
+        time = random_time_15min(),
+        year_short = str(random.randint(2021, 2031))
     )
