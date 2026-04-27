@@ -82,6 +82,7 @@ class BasePage:
         element = self.element_is_present(locator, timeout)
         select = Select(element)
         select.select_by_visible_text(text)
+        return select.first_selected_option.text
 
     def drag_and_drop_by_offset(self, element, x, y):
         action = ActionChains(self.driver)

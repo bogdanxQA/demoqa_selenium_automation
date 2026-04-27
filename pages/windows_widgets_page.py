@@ -6,10 +6,12 @@ from locators.slider_page_locators import SliderPageLocators
 from locators.progress_bar_page_locators import ProgressBarPageLocators
 from locators.tool_tips_page_locators import ToolTipsPageLocators
 from locators.tabs_page_locators import TabsPageLocators
+from locators.menu_page_locators import MenuPageLocators
+from locators.select_menu_page_locators import SelectMenuPageLocators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from data.data import COLORS
+from data.data import COLORS, OPTIONS_FOR_ONE, OPTIONS_FOR_VALUE
 from selenium.webdriver.common.keys import Keys
 import random
 from data.generator.generator import date_generated
@@ -267,6 +269,75 @@ class ToolTipsPage(BasePage):
         content = self.element_is_visible(self.locators.HOVER_CONTENT).text
         return content
     
+
+class MenuPage(BasePage):
+
+    locators = MenuPageLocators()
+    
+    def check_menu(self):
+        menu_links = self.elements_are_presents(self.locators.MENU_LINKS)
+        data = []
+        for link in menu_links:
+            self.move_to_element(link)
+            # self.element_is_visible(link)
+            data.append(link.text)
+
+        return data
+
+
+class SelectMenuPage(BasePage):
+
+    locators = SelectMenuPageLocators()
+
+    def select_random_value_in_first_selector(self):
+
+        input = self.element_is_visible(self.locators.SELECT_VALUE_INPUT)
+        input.click()
+        chosen_option = random.choice(OPTIONS_FOR_VALUE)
+        option = self.wait_for_element_text_in_list(self.locators.SELECT_OPTIONS, chosen_option)
+        option.click()
+        displayed_text = self.wait_for_element_text_in_list(self.locators.DISPLAYED_OPTION, chosen_option).text
+        return chosen_option, displayed_text
+    
+    def select_random_value_in_second_selector(self):
+
+        input = self.element_is_visible(self.locators.SELECT_ONE_INPUT)
+        input.click()
+        chosen_option = random.choice(OPTIONS_FOR_ONE)
+        option = self.wait_for_element_text_in_list(self.locators.SELECT_OPTIONS, chosen_option)
+        option.click()
+        displayed_text = self.wait_for_element_text_in_list(self.locators.DISPLAYED_OPTION, chosen_option).text
+        return chosen_option, displayed_text
+    
+    def select_random_color_in_old_style_select_menu(self):
+
+        chosen_color = random.choice(COLORS)
+        selected_value = self.select_by_text(self.locators.OLD_SELECT, chosen_color)
+        return chosen_color, selected_value
+    
+    def multi_select_drop_down(self):
+        colors = ["Blue", "Black", "Green", "Red"]
+        k = random.randint(1, len(colors))
+        chosen_colors = random.sample(colors, k)
+        input = self.element_is_visible(self.locators.MULTI_SELECT_DROP_DOWN)
+        input.click()
+        
+        for color in chosen_colors:
+            element = self.wait_for_element_text_in_list(self.locators.SELECT_OPTIONS, color)
+            element.click()
+            
+        return chosen_colors
+    
+    def get_displayed_colors_in_multi_select(self):
+        elements = self.elements_are_presents(self.locators.DISPLAYED_COLORS_MULTI_SELECT)
+        return [element.text for element in elements]
+            
+
+
+    
+    
+
+
 
     
 

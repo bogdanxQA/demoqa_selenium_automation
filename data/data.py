@@ -45,4 +45,22 @@ SUBJECTS_LIST = [
 ]
 
 COLORS = ["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
+
+OPTIONS_FOR_VALUE = [
+    "Group 1, option 1",
+    "Group 1, option 2",
+    "Group 2, option 1",
+    "Group 2, option 2",
+    "A root option",
+    "Another root option"
+]
+
+OPTIONS_FOR_ONE = [
+    "Dr.",
+    "Mr.",
+    "Mrs.",
+    "Ms.",
+    "Prof.",
+    "Other"
+]
        

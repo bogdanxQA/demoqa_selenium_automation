@@ -1,4 +1,4 @@
-from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage
+from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage, MenuPage, SelectMenuPage
 import pytest
 
 class TestWindowsWidgets:
@@ -110,25 +110,66 @@ class TestWindowsWidgets:
             page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
             page.open()
             content = page.hover_to_button_and_get_content()
-            assert content == "You hovered over the Button"
+            assert content == "You hovered over the Button", "Hover отсутствует или изменился контет"
 
         def test_hover_me_input(self, driver):
             page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
             page.open()
             content = page.hover_to_input_and_get_content()
-            assert content == "You hovered over the text field"
+            assert content == "You hovered over the text field", "Hover отсутствует или изменился контет"
 
         def test_hover_to_contrary(self, driver):
             page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
             page.open()
             content = page.hover_to_contrary_and_get_content()
-            assert content == "You hovered over the Contrary"
+            assert content == "You hovered over the Contrary", "Hover отсутствует или изменился контет"
 
         def test_hover_to_text(self, driver):
             page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
             page.open()
             content = page.hover_to_text_and_get_content()
-            assert content == "You hovered over the 1.10.32"
+            assert content == "You hovered over the 1.10.32", "Hover отсутствует или изменился контет"
+
+    class TestMenuPage:
+
+        def test_check_menu_items(self, driver):
+            page = MenuPage(driver, "https://demoqa.com/menu")
+            page.open()
+            data = page.check_menu()
+            assert ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1', 'Sub Sub Item 2', 'Main Item 3'] == data, "Раскрываются не все элементы меню"
+
+
+    class TestSelectMenuPage:
+
+        def test_random_select_value(self, driver):
+            page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            page.open()
+            chosen_option, displayed_text = page.select_random_value_in_first_selector()
+            assert chosen_option == displayed_text, f"В списке выбора отсутствует опция {chosen_option} или после ее выбора данные отобразились некорректно"
+
+        def test_random_select_one(self, driver):
+            page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            page.open()
+            chosen_option, displayed_text = page.select_random_value_in_second_selector()
+            assert chosen_option == displayed_text, f"В списке выбора отсутствует опция {chosen_option} или после ее выбора данные отобразились некорректно"
+
+        def test_old_style_select_menu(self, driver):
+            page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            page.open()
+            chosen_color, selected_value = page.select_random_color_in_old_style_select_menu()
+            assert chosen_color == selected_value, "Выбранный цвет отличается от отображаемого"
+
+        def test_random_multi_select_drop_down(self, driver):
+            page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+            page.open()
+            chosen_colors = page.multi_select_drop_down()
+            displayed_colors = page.get_displayed_colors_in_multi_select()
+            assert chosen_colors == displayed_colors, "Не все выбранные значения отобразились в интерфейсе"
+
+        
+
+            
+            
 
 
             
