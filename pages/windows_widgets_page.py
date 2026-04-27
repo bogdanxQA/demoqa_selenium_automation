@@ -4,6 +4,8 @@ from locators.auto_complete_page_locators import AutoCompletePageLocators
 from locators.date_picker_page_locators import DatePickerPageLocators
 from locators.slider_page_locators import SliderPageLocators
 from locators.progress_bar_page_locators import ProgressBarPageLocators
+from locators.tool_tips_page_locators import ToolTipsPageLocators
+from locators.tabs_page_locators import TabsPageLocators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -153,7 +155,7 @@ class SliderPage(BasePage):
 
 class ProgressBarPage(BasePage):
 
-    locators = ProgressBarPageLocators
+    locators = ProgressBarPageLocators()
 
     def start_stop_progress_bar(self):
         before = self.element_is_present(self.locators.PROGRESS_BAR).text
@@ -175,6 +177,97 @@ class ProgressBarPage(BasePage):
         time.sleep(0.5)
         after = self.element_is_present(self.locators.PROGRESS_BAR).text
         return after, before
+    
+class TabsPage(BasePage):
+
+    locators = TabsPageLocators()
+
+    def open_what_tab_and_get_content(self):
+
+        what_tab = self.element_is_visible(self.locators.WHAT_TAB)
+        if what_tab.get_attribute("aria-selected") == 'true':
+            content = self.element_is_visible(self.locators.WHAT_TAB_CONTENT).text
+        else: 
+            what_tab.click()
+            content = self.element_is_visible(self.locators.WHAT_TAB_CONTENT).text
+
+        is_opened = what_tab.get_attribute("aria-selected")
+        return content, is_opened
+    
+    def open_origin_tab_and_get_content(self):
+
+        origin_tab = self.element_is_visible(self.locators.ORIGIN_TAB)
+        if origin_tab.get_attribute("aria-selected") == 'true':
+            content = self.element_is_visible(self.locators.ORIGIN_TAB_CONTENT).text
+        else: 
+            origin_tab.click()
+            content = self.element_is_visible(self.locators.ORIGIN_TAB_CONTENT).text
+
+        is_opened = origin_tab.get_attribute("aria-selected")
+        return content, is_opened
+    
+
+    def open_use_tab_and_get_content(self):
+
+        use_tab = self.element_is_visible(self.locators.USE_TAB)
+        if use_tab.get_attribute("aria-selected") == 'true':
+            content = self.element_is_visible(self.locators.USE_TAB_CONTENT).text
+        else: 
+            use_tab.click()
+            content = self.element_is_visible(self.locators.USE_TAB_CONTENT).text
+
+        is_opened = use_tab.get_attribute("aria-selected")
+        return content, is_opened
+    
+    def open_more_tab_and_get_content(self):
+
+        more_tab = self.element_is_visible(self.locators.MORE_TAB)
+        if more_tab.get_attribute("aria-selected") == 'true':
+            content = self.element_is_visible(self.locators.MORE_TAB_CONTENT).text
+        else: 
+            more_tab.click()
+            content = self.element_is_visible(self.locators.MORE_TAB_CONTENT).text
+
+        is_opened = more_tab.get_attribute("aria-selected")
+        return content, is_opened
+    
+class ToolTipsPage(BasePage):
+
+    locators = ToolTipsPageLocators()
+
+    def hover_to_button_and_get_content(self):
+        button = self.element_is_visible(self.locators.HOVER_ME_BUTTON)
+        time.sleep(0.05)
+        self.move_to_element(button)
+        self.element_is_visible(self.locators.AFTER_HOVER_BUTTON)
+        content = self.element_is_visible(self.locators.HOVER_CONTENT).text
+        return content
+    
+    def hover_to_input_and_get_content(self):
+        input = self.element_is_visible(self.locators.HOVER_ME_INPUT)
+        time.sleep(0.05)
+        self.move_to_element(input)
+        self.element_is_visible(self.locators.AFTER_HOVER_INPUT)
+        content = self.element_is_visible(self.locators.HOVER_CONTENT).text
+        return content
+    
+    def hover_to_contrary_and_get_content(self):
+        input = self.element_is_visible(self.locators.HOVER_CONTRARY)
+        time.sleep(0.05)
+        self.move_to_element(input)
+        self.element_is_visible(self.locators.AFTER_HOVER_CONTRARY)
+        content = self.element_is_visible(self.locators.HOVER_CONTENT).text
+        return content
+    
+    def hover_to_text_and_get_content(self):
+        input = self.element_is_visible(self.locators.HOVER_TEXT)
+        time.sleep(0.05)
+        self.move_to_element(input)
+        self.element_is_visible(self.locators.AFTER_HOVER_TEXT)
+        content = self.element_is_visible(self.locators.HOVER_CONTENT).text
+        return content
+    
+
     
 
 

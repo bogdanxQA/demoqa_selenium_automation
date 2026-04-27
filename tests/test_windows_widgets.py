@@ -1,4 +1,4 @@
-from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage
+from pages.windows_widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, ToolTipsPage
 import pytest
 
 class TestWindowsWidgets:
@@ -73,13 +73,63 @@ class TestWindowsWidgets:
             after, before = page.reset_full_progress_bar()
             assert after == before, f"Progress bar не был сброшен: начальное значение {before}, конечное {after}"
 
+    class TestTabsPage:
+
+        def test_what_tab(self, driver):
+            page = TabsPage(driver, "https://demoqa.com/tabs")
+            page.open()
+            content, is_opend = page.open_what_tab_and_get_content()
+            assert is_opend == "true", "Нажатие на tab с именем What не привело к раскрытию контента"
+            assert len(content)>0, "Контент в tab = What отсутствует"
+
+        def test_origin_tab(self, driver):
+            page = TabsPage(driver, "https://demoqa.com/tabs")
+            page.open()
+            content, is_opend = page.open_origin_tab_and_get_content()
+            assert is_opend == "true", "Нажатие на tab с именем Origin не привело к раскрытию контента"
+            assert len(content)>0, "Контент в tab = Origin отсутствует"
+
+        def test_use_tab(self, driver):
+            page = TabsPage(driver, "https://demoqa.com/tabs")
+            page.open()
+            content, is_opend = page.open_use_tab_and_get_content()
+            assert is_opend == "true", "Нажатие на tab с именем Use не привело к раскрытию контента"
+            assert len(content)>0, "Контент в tab = Use отсутствует"
+
+        @pytest.mark.xfail(reason="Кнопка всегда неактивна. Known Bug")
+        def test_more_tab(self, driver):
+            page = TabsPage(driver, "https://demoqa.com/tabs")
+            page.open()
+            content, is_opend = page.open_use_tab_and_get_content()
+            assert is_opend == "true", "Нажатие на tab с именем More не привело к раскрытию контента"
+            assert len(content)>0, "Контент в tab = More отсутствует"
+
+    class TestToolTipsPage:
+
+        def test_hover_me_button(self, driver):
+            page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
+            page.open()
+            content = page.hover_to_button_and_get_content()
+            assert content == "You hovered over the Button"
+
+        def test_hover_me_input(self, driver):
+            page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
+            page.open()
+            content = page.hover_to_input_and_get_content()
+            assert content == "You hovered over the text field"
+
+        def test_hover_to_contrary(self, driver):
+            page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
+            page.open()
+            content = page.hover_to_contrary_and_get_content()
+            assert content == "You hovered over the Contrary"
+
+        def test_hover_to_text(self, driver):
+            page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
+            page.open()
+            content = page.hover_to_text_and_get_content()
+            assert content == "You hovered over the 1.10.32"
 
 
             
-            
-
-
-            
-
-
             
