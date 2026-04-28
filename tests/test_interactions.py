@@ -1,4 +1,4 @@
-from pages.interactions_page import SortablePage, SelectablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage
 
 
 
@@ -35,3 +35,23 @@ class TestInteractions():
             active_items = page.get_active_items_in_grid()
             for item in selected_items:
                 assert item in active_items, f"Элемент {item} после клика по нему не стал активным"
+
+    class TestResizable:
+
+        def test_max_min_size_resizable_box_with_boundaries(self, driver):
+            page = ResizablePage(driver, "https://demoqa.com/resizable")
+            page.open()
+            max_size, min_size = page.change_size_in_resizable_box_with_boundaries()
+            assert max_size[0] == "500px", f"Максимальная ширина изменяемого окна изменилась: получено {max_size[0]}, ожидалось 500px"
+            assert max_size[1] == "300px", f"Максимальная высота изменяемого окна изменилась: получено {max_size[1]}, ожидалось 300px"
+            assert min_size[0] == "150px", f"Максимальная ширина изменяемого окна изменилась: получено {min_size[0]}, ожидалось 150px"
+            assert min_size[1] == "150px", f"Максимальная высота изменяемого окна изменилась: получено {min_size[1]}, ожидалось 150px"
+
+        def test_resizable_box_wo_boundaries(self, driver):
+            page = ResizablePage(driver, "https://demoqa.com/resizable")
+            page.open()
+            start_size, increased_size, min_size = page.change_size_in_resizable_wo_boundaries()
+            assert increased_size != start_size, "Размер изменяемого окна без ограничений не изменился"
+            assert min_size[0] == "20px", f"Максимальная ширина изменяемого окна изменилась: получено {min_size[0]}, ожидалось 20px"
+            assert min_size[1] == "20px", f"Максимальная высота изменяемого окна изменилась: получено {min_size[1]}, ожидалось 20px"
+

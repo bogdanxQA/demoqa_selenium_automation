@@ -1,6 +1,7 @@
 from pages.base_page import BasePage
 from locators.sortable_page_locators import SortablePageLocators
 from locators.selectable_page_locators import SelectablePageLocators
+from locators.resizable_page_locators import ResizablePageLocators
 import random
 import time
 
@@ -91,6 +92,42 @@ class SelectablePage(BasePage):
     def get_active_items_in_grid(self):
         active_items = self.elements_are_presents(self.locators.ACTIVE_GRID_ITEMS)
         return [item.text for item in active_items]
+
+
+class ResizablePage(BasePage):
+
+    locators = ResizablePageLocators()
+
+    def change_size_in_resizable_box_with_boundaries(self):
+        resizable_box = self.element_is_present(self.locators.RESIZABLE_BOX_WITH_BOUNDARIES)
+        
+        handle = self.elements_are_visible(self.locators.HANDLE)[0]
+        
+        time.sleep(0.5) #Либо на этом сайте элементы не стабильны, либо мне не хватает знаний. Можно написать в BasePage метод универсальный, который дожидается стабильности элемента, но он тоже будет использовать time.sleep
+        self.drag_and_drop_by_offset(handle, 500, 500)
+        max_size = self.get_width_and_height(resizable_box)
+        self.drag_and_drop_by_offset(handle, -350, -350)
+        min_size = self.get_width_and_height(resizable_box)
+        return max_size, min_size
+        
+
+
+    def get_width_and_height(self, element):
+        before = element.get_attribute("style")
+        width = before.split("width: ")[1].split(";")[0].strip()
+        height = before.split("height: ")[1].split(";")[0].strip()
+        return [width, height]
+    
+    def change_size_in_resizable_wo_boundaries(self):
+        resizable = self.element_is_present(self.locators.RESIZABLE_WO_BOUNDARIES)
+        start_size = self.get_width_and_height(resizable)
+        handle = self.elements_are_visible(self.locators.HANDLE)[1]
+        time.sleep(0.5)
+        self.drag_and_drop_by_offset(handle, random.randint(1, 400), random.randint(1, 400))
+        increased_size = self.get_width_and_height(resizable)
+        self.drag_and_drop_by_offset(handle, -500, -500)
+        min_size = self.get_width_and_height(resizable)
+        return start_size, increased_size, min_size
 
 
 
