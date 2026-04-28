@@ -2,8 +2,12 @@ from pages.base_page import BasePage
 from locators.sortable_page_locators import SortablePageLocators
 from locators.selectable_page_locators import SelectablePageLocators
 from locators.resizable_page_locators import ResizablePageLocators
+from locators.droppable_page_locators import DroppablePageLocators
+from selenium.webdriver.support.color import Color
+from selenium.webdriver.common.action_chains import ActionChains
 import random
 import time
+from typing import Literal
 
 
 class SortablePage(BasePage):
@@ -128,6 +132,130 @@ class ResizablePage(BasePage):
         self.drag_and_drop_by_offset(handle, -500, -500)
         min_size = self.get_width_and_height(resizable)
         return start_size, increased_size, min_size
+    
+class DroppablePage(BasePage):
+
+    locators = DroppablePageLocators()
+
+    def drag_and_drop_simple(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_me = self.element_is_visible(self.locators.DRAGGABLE)
+        drop_here = self.element_is_visible(self.locators.DROPPABLE)
+        
+        self.drag_and_drop_elements(drag_me, drop_here)
+        res = drop_here.text
+        rgba_color = drop_here.value_of_css_property("background-color")
+        hex_color = Color.from_string(rgba_color).hex
+        return res, hex_color
+    
+    def drag_and_drop_acceptable(self):
+        self.element_is_visible(self.locators.ACCEPT_TAB).click()
+        acceptable = self.element_is_visible(self.locators.ACCEPTABLE_DRAG)
+        drop = self.element_is_visible(self.locators.ACCEPTABLE_DROP)
+        hex_color_before = Color.from_string(drop.value_of_css_property("background-color")).hex
+        hex_color_after_click_and_hold = self.drag_wo_drop(source=acceptable, active_drop_locator=self.locators.ACCEPTABLE_DROP_ACTIVE)
+        self.drag_and_drop_elements(acceptable, drop)
+        res = drop.text
+        hex_color_after_drop = Color.from_string(drop.value_of_css_property("background-color")).hex
+        return hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res
+
+
+    def drag_wo_drop(self, source, active_drop_locator):
+        action = ActionChains(self.driver)
+        action.click_and_hold(source).pause(0.2).move_by_offset(5,5).pause(0.5).perform()
+        
+        active_drop = self.element_is_present(active_drop_locator)
+        hex_color_after_click_and_hold = Color.from_string(active_drop.value_of_css_property("background-color")).hex
+        action.release().perform()
+        return hex_color_after_click_and_hold
+    
+    def drag_and_drop_not_acceptable(self):
+        self.element_is_visible(self.locators.ACCEPT_TAB).click()
+        not_acceptable = self.element_is_visible(self.locators.NOT_ACCEPTABLE_DRAG)
+        drop = self.element_is_visible(self.locators.ACCEPTABLE_DROP)
+        self.drag_and_drop_elements(not_acceptable, drop)
+        return drop.text
+    
+ 
+
+
+    def _drag_and_drop_common(self, outer_drop_locator, inner_drop_locator, where, is_greedy=False):
+        self.element_is_visible(self.locators.PREVENT_PROPOGATION_TAB).click()
+        prevent_drag = self.element_is_visible(self.locators.PREVENT_DRAG)
+        outer_drop = self.element_is_visible(outer_drop_locator)
+        inner_drop = self.element_is_visible(inner_drop_locator)
+        
+        hex_color_before = Color.from_string(outer_drop.value_of_css_property("background-color")).hex
+        hex_color_after_click_and_hold = self.drag_wo_drop(
+            source=prevent_drag,
+            active_drop_locator=self.locators.ACTIVE_NOT_GREEDY_DROP_BOX
+        )
+        
+        if where == "outer":
+            self.drag_and_drop_elements_with_offset(prevent_drag, outer_drop, 0, -90)
+            hex_color_after_drop = Color.from_string(outer_drop.value_of_css_property("background-color")).hex
+            res_outer = outer_drop.text.splitlines()
+            return hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res_outer
+        else:  # where == "inner"
+            self.drag_and_drop_elements(prevent_drag, inner_drop)
+            hex_color_outer_after_drop = Color.from_string(outer_drop.value_of_css_property("background-color")).hex
+            res_outer = outer_drop.text.splitlines()
+            if is_greedy:
+                hex_color_inner_after_drop = Color.from_string(inner_drop.value_of_css_property("background-color")).hex
+                return hex_color_before, hex_color_after_click_and_hold, hex_color_outer_after_drop, hex_color_inner_after_drop, res_outer
+            else:
+                return hex_color_before, hex_color_after_click_and_hold, hex_color_outer_after_drop, res_outer
+
+    def drag_and_drop_not_greedy_box(self, where: Literal["inner", "outer"]):
+        return self._drag_and_drop_common(
+            self.locators.NOT_GREEDY_OUTER_DROP_BOX,
+            self.locators.NOT_GREEDY_INNER_DROP_BOX,
+            where,
+            is_greedy=False
+        )
+
+    def drag_and_drop_greedy_box(self, where: Literal["inner", "outer"]):
+        return self._drag_and_drop_common(
+            self.locators.GREEDY_OUTER_DROP_BOX,
+            self.locators.GREEDY_INNER_DROP_BOX,
+            where,
+            is_greedy=True
+        )
+    
+
+    def drag_and_drop_revert_and_not_revert_item(self, which: Literal["revert", "not_revert"]):
+        self.element_is_visible(self.locators.REVERT_DRAGGABLE_TAB).click()
+        drop_box = self.element_is_visible(self.locators.DROB_BOX_REVERT)
+
+        
+        if which == "revert":
+            drag_item = self.element_is_visible(self.locators.REVERTABLE_DRAG)
+            after_drop_locator = self.locators.REVERT_ITEM_AFTER_DROP
+        else:
+            drag_item = self.element_is_visible(self.locators.NOT_REVERTABLE_DRAG)
+            after_drop_locator = self.locators.NOT_REVERT_ITEM_AFTER_DROP
+
+        self.drag_and_drop_elements(drag_item, drop_box)
+        self.element_is_present(after_drop_locator)  
+
+        
+        position_after_move = drag_item.get_attribute("style")
+        left = position_after_move.split("left: ")[1].split(";")[0]
+        top = position_after_move.split("top: ")[1].split(";")[0]
+
+        return left, top, drop_box.text
+
+
+        
+
+    
+
+            
+
+
+
+
+
 
 
 

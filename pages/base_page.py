@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import Select
 
 
 
+
 class BasePage:
     def __init__(self, driver, url):
         self.driver = driver
@@ -100,12 +101,19 @@ class BasePage:
 
     def drag_and_drop_elements(self, what, where):
         action = ActionChains(self.driver)
+        action.pause(0.5)
         action.drag_and_drop(what, where).pause(0.05)
         action.perform()
-
-    def manual_drag_and_drop_elements(self, source, target):
+    
+    def drag_and_drop_elements_with_offset(self, source, target, x_offset=0, y_offset=0):
         action = ActionChains(self.driver)
-        action.click_and_hold(source).pause(0.2).move_to_element(target).pause(0.2).release(target).perform()
+        action.click_and_hold(source).pause(0.1)
+        action.move_to_element_with_offset(target, x_offset, y_offset).pause(0.1)
+        action.release().perform()
+
+    # def manual_drag_and_drop_elements(self, source, target):
+    #     action = ActionChains(self.driver)
+    #     action.click_and_hold(source).pause(0.2).move_to_element(target).pause(0.2).release(target).perform()
 
     def drag_and_drop_with_offset(self, source, target, y_offset=10):
         action = ActionChains(self.driver)

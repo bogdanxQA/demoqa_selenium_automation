@@ -1,4 +1,5 @@
-from pages.interactions_page import SortablePage, SelectablePage, ResizablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+import pytest
 
 
 
@@ -36,7 +37,7 @@ class TestInteractions():
             for item in selected_items:
                 assert item in active_items, f"Элемент {item} после клика по нему не стал активным"
 
-    class TestResizable:
+    class TestResizablePage:
 
         def test_max_min_size_resizable_box_with_boundaries(self, driver):
             page = ResizablePage(driver, "https://demoqa.com/resizable")
@@ -54,4 +55,92 @@ class TestInteractions():
             assert increased_size != start_size, "Размер изменяемого окна без ограничений не изменился"
             assert min_size[0] == "20px", f"Максимальная ширина изменяемого окна изменилась: получено {min_size[0]}, ожидалось 20px"
             assert min_size[1] == "20px", f"Максимальная высота изменяемого окна изменилась: получено {min_size[1]}, ожидалось 20px"
+
+
+    class TestDroppablePage:
+
+        def test_simple_tab_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            result, hex_color = page.drag_and_drop_simple()
+            assert result == "Dropped!", "Элемент не был перемещен или изменился текст в drop box после перемещения"
+            assert hex_color == "#4682b4", "Цвет элемента после перемещения не изменился"
+
+        def test_acceptable_in_acept_tab_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res = page.drag_and_drop_acceptable()
+            assert hex_color_before == "#000000", "Изначальный цвет элемента Drop-container изменился. Ожидался #000000"
+            assert hex_color_after_click_and_hold == "#3cb371", "Цвет Drop-container после захвата droppable элемента изменился. Ожидался #3cb371"
+            assert hex_color_after_drop == "#4682b4", "Цвет Drop-container после перемещения в него droppable элемента изменился. Ожидался #4682b4 "
+            assert res == "Dropped!", "Элемент не был перемещен или изменился текст в drop box после перемещения"
+
+        def test_not_acceptable_in_acept_tab_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            res = page.drag_and_drop_not_acceptable()
+            assert res == "Drop here", "Элемент Drop-container неверно отреагировал на перемещение в него Not Acceptable droppable элемента"
+
+        
+        def test_not_greedy_outer_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res = page.drag_and_drop_not_greedy_box("outer")
+            assert hex_color_before == "#000000", "Изначальный цвет элемента Drop-container изменился. Ожидался #000000"
+            assert hex_color_after_click_and_hold == "#3cb371", "Цвет Drop-container после захвата droppable элемента изменился. Ожидался #3cb371"
+            assert hex_color_after_drop == "#4682b4", "Цвет Drop-container после перемещения в него droppable элемента изменился. Ожидался #4682b4 "
+            assert res[0] == "Dropped!", "Элемент не был перемещен. Или текст отображаемый после перемещения был изменен"
+            assert res[1] == "Inner droppable (not greedy)", "Изменилось расположение inner drop box или текст отображаемый при непопадании элемента в drop box был изменен."
+
+        def test_not_greedy_inner_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res = page.drag_and_drop_not_greedy_box("inner")
+            assert hex_color_before == "#000000", "Изначальный цвет элемента Drop-container изменился. Ожидался #000000"
+            assert hex_color_after_click_and_hold == "#3cb371", "Цвет Drop-container после захвата droppable элемента изменился. Ожидался #3cb371"
+            assert hex_color_after_drop == "#4682b4", "Цвет Drop-container после перемещения в него droppable элемента изменился. Ожидался #4682b4 "
+            assert res[0] == "Dropped!" and res[1] == "Dropped!" , "Элемент не был перемещен. Или текст отображаемый после перемещения был изменен"
+
+        def test_greedy_outer_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            hex_color_before, hex_color_after_click_and_hold, hex_color_after_drop, res = page.drag_and_drop_greedy_box("outer")
+            assert hex_color_before == "#000000", "Изначальный цвет элемента Drop-container изменился. Ожидался #000000"
+            assert hex_color_after_click_and_hold == "#3cb371", "Цвет Drop-container после захвата droppable элемента изменился. Ожидался #3cb371"
+            assert hex_color_after_drop == "#4682b4", "Цвет Drop-container после перемещения в него droppable элемента изменился. Ожидался #4682b4 "
+            assert res[0] == "Dropped!", "Элемент не был перемещен. Или текст отображаемый после перемещения был изменен"
+            assert res[1] == "Inner droppable (greedy)", "Изменилось расположение inner drop box или текст отображаемый при непопадании элемента в drop box был изменен."
+
+        def test_greedy_inner_drag_and_drop(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            hex_color_before, hex_color_after_click_and_hold, hex_color_outer_after_drop, hex_color_inner_after_drop, res = page.drag_and_drop_greedy_box("inner")
+            assert hex_color_before == "#000000", "Изначальный цвет элемента Drop-container изменился. Ожидался #000000"
+            assert hex_color_after_click_and_hold == "#3cb371", "Цвет Drop-container после захвата droppable элемента изменился. Ожидался #3cb371"
+            assert hex_color_outer_after_drop == "#000000", "Цвет outer drop box после перемещения в него droppable элемента изменился. Ожидался #000000 "
+            assert hex_color_inner_after_drop == "#4682b4", "Цвет inner drop box после перемещения в него droppable элемента изменился. Ожидался #4682b4 "
+            assert res[0] == "Outer droppable" and res[1] == "Dropped!" , "Элемент не был перемещен. Или текст отображаемый после перемещения был изменен"
+
+        def test_revertable_item(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            left, top, res = page.drag_and_drop_revert_and_not_revert_item("revert")
+            assert (left, top) == ("0px", "0px"), "Revertable элемент не вернулся на изначальную позицию после drag and drop."
+            assert res == "Dropped!", "Элемент не был перемещен или изменился текст в drop box после перемещения"
+
+        def test_not_revertable_item(self, driver):
+            page = DroppablePage(driver, "https://demoqa.com/droppable")
+            page.open()
+            left, top, res = page.drag_and_drop_revert_and_not_revert_item("not_revert")
+            assert (left, top) != ("0px", "0px"), "Not revertable элемент изменил свою позицию после drag and drop."
+            assert res == "Dropped!", "Элемент не был перемещен или изменился текст в drop box после перемещения"
+
+            
+            
+           
+            
+
+
+
+
 
