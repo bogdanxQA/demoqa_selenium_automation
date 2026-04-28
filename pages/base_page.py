@@ -55,6 +55,15 @@ class BasePage:
                 return element
         raise TimeoutException(f"Элемент с текстом '{expected}' не найден среди заданных локаторов")
     
+    """Ожидает, пока элементы будут иметь непустой текст."""
+    def wait_for_elements_to_have_text(self, locator, timeout=10):
+   
+        elements = self.elements_are_presents(locator, timeout)  # ждём, что хотя бы один элемент появился
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: all(el.text.strip() != '' for el in elements)
+        )
+        return elements
+    
     # def text_contains_in_element(self, locator, substring, timeout=10):
     #     print(f"Ожидание текста '{substring}' в элементе {locator}, таймаут {timeout} сек")
     #     return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, substring))
@@ -88,6 +97,21 @@ class BasePage:
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, x, y)
         action.perform()
+
+    def drag_and_drop_elements(self, what, where):
+        action = ActionChains(self.driver)
+        action.drag_and_drop(what, where).pause(0.05)
+        action.perform()
+
+    def manual_drag_and_drop_elements(self, source, target):
+        action = ActionChains(self.driver)
+        action.click_and_hold(source).pause(0.2).move_to_element(target).pause(0.2).release(target).perform()
+
+    def drag_and_drop_with_offset(self, source, target, y_offset=10):
+        action = ActionChains(self.driver)
+        action.click_and_hold(source).pause(0.1)
+        action.move_to_element(target).move_by_offset(0, y_offset).pause(0.1)
+        action.release().perform()
         
 
     def double_click(self, element):
