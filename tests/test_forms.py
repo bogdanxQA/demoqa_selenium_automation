@@ -1,12 +1,15 @@
 from pages.forms_page import PracticeFormPage
 import pytest
+import allure
 
-
+@allure.suite("Forms")
 class TestForms():
+
+    @allure.feature("PracticeForm")
     class TestPracticeFormPage:
 
+        @allure.title("Check displayed data after filling form")
         def test_practice_form_page(self, driver):
-
             page = PracticeFormPage(driver, "https://demoqa.com/automation-practice-form")
             page.open()
             expected_values = page.fill_all_inputs()
@@ -22,6 +25,7 @@ class TestForms():
             assert displayed_value["Address"] == expected_values["address"]
             assert displayed_value["State and City"] == f"{expected_values['state']} {expected_values['city']}"
 
+        @allure.title("Check close button")
         @pytest.mark.xfail(reason="Кнопка Close не закрывает модальное окно (known bug)")
         def test_modal_close_button_does_not_work(self, driver):
 

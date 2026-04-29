@@ -1,10 +1,15 @@
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, DownloadAndUploadPage, DynamicPropertiesPage
 import pytest
+import allure
 
 
-
+@allure.suite("Elements")
 class TestElements:
+
+    @allure.feature("TextBox")
     class TestTextBoxPage:
+
+        @allure.title("Check TextBox")
         def test_text_box(self, driver):
             page = TextBoxPage(driver, url="https://demoqa.com/text-box")
             page.open()
@@ -15,8 +20,10 @@ class TestElements:
             assert current_address == created_current_address, f"Ожидаемый current_address: {current_address} не соответствует фактическому: {created_current_address}"
             assert permanent_address == created_permanent_address, f"Ожидаемый permanent_address: {permanent_address} не соответствует фактическому: {created_permanent_address}"
     
-    
+    @allure.feature("CheckBox")
     class TestCheckBoxPage:
+
+        @allure.title("Check CheckBox")
         def test_check_box(self, driver):
             page = CheckBoxPage(driver, "https://demoqa.com/checkbox")
             page.open()
@@ -26,19 +33,24 @@ class TestElements:
             displayed_res = page.get_displayed_selected_values() 
             assert set(displayed_res) == set(expected_res), f"Ожидаемый результат: {expected_res} не совпадает с фактическим: {displayed_res}"
 
+    @allure.feature("RadioButton")
     class TestRadioButtonPage:
+
+        @allure.title("Check RadioButton Yes")
         def test_radio_button_yes(self, driver):
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
             radio_button_page.open()
             radio_button_page.click_to_radio_button_yes()
             assert "Yes" in radio_button_page.get_displayed_selected_button(), "Yes не отображается в выбранных"
 
+        @allure.title("Check RadioButton Impressive")
         def test_radio_button_impressive(self, driver):
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
             radio_button_page.open()
             radio_button_page.click_to_radio_button_impressive()
             assert "Impressive" in radio_button_page.get_displayed_selected_button(), "Impressive не отображается в выбранных"
-
+        
+        @allure.title("Check RadioButton No")
         @pytest.mark.xfail(reason="На странице радиокнопка No всегда отключена")
         def test_radio_button_no(self, driver):
             radio_button_page = RadioButtonPage(driver, "https://demoqa.com/radio-button")
@@ -46,7 +58,10 @@ class TestElements:
             is_enabled = radio_button_page.is_radio_button_no_enabled()
             assert is_enabled == True, "Радио кнопка No не становится активной"
 
+    @allure.feature("WebTables")
     class TestWebTablesPage:
+
+        @allure.title("Check new record in table")
         def test_add_new_data(self, driver):
             web_tables_page = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables_page.open()
@@ -56,16 +71,16 @@ class TestElements:
             for record in excepted_data:
              assert record in full_data, f"Запись '{record}' не найдена в таблице"
 
-
+        @allure.title("Check search and results")
         def test_search_and_result(self, driver):
             page = WebTablesPage(driver, "https://demoqa.com/webtables")
             page.open()
-            name = page.add_new_data()[0].split()[0] 
+            name = page.add_new_data()[0].split()[0]
             excepted_data = page.search_box_clear_and_send_keys(send_keys=name)
             displayed_data = page.get_full_data()
             assert excepted_data in displayed_data[0], f"Ожидаемого значения {excepted_data} не обнаружено в отображенном результате {displayed_data[0]}"
 
-        
+        @allure.title("Check update data in table")
         def test_update_data(self, driver):
             page = WebTablesPage(driver, "https://demoqa.com/webtables")
             page.open()
@@ -77,7 +92,7 @@ class TestElements:
             for field, expected_value in excepted_data.items():
                 assert expected_value in displayed_data, f"Поле '{field}' со значением '{expected_value}' не обнаружено в отображенном результате: {displayed_data}"
 
-
+        @allure.title("Check delete data from table")
         def test_delete_data(self, driver):
             page = WebTablesPage(driver, "https://demoqa.com/webtables")
             page.open()
@@ -88,8 +103,8 @@ class TestElements:
             assert displayed_data == [], f"После удаления данные остались в таблице: {displayed_data}"
 
 
-        
         """Проверяем на максимальном селекте сколько отображается строк. Добиваем до 50-ти проверяем каждый селект (сколько отображает)"""        
+        @allure.title("Check show button")
         def test_show_button(self,driver):
             page = WebTablesPage(driver, "https://demoqa.com/webtables")
             page.open()
@@ -109,37 +124,41 @@ class TestElements:
         #def можно добавить проверку пагинации, но необходимо много тестовых данных
 
     """В методе double_click_on_btn есть костыль. Не смог исправить"""
+    @allure.feature("Buttons")
     class TestButtonsPage:
 
+        @allure.title("Check double click btn")
         def test_double_click_on_btn(self, driver):
             page = ButtonsPage(driver, "https://demoqa.com/buttons")
             page.open()
             msg = page.double_click_on_btn()
             assert msg == "You have done a double click"
             
-            
+        @allure.title("Check right click btn")    
         def test_right_click_on_btn(self, driver):
             page = ButtonsPage(driver, "https://demoqa.com/buttons")
             page.open()
             msg = page.right_click_on_btn()
             assert msg == "You have done a right click"
             
-                    
+        @allure.title("Check dynamic click btn")            
         def test_click_on_click_me_btn(self, driver):
             page = ButtonsPage(driver, "https://demoqa.com/buttons")
             page.open()
             msg = page.click_on_click_me_button()
             assert msg == "You have done a dynamic click"
-    
+
+    @allure.feature("Links")
     class TestLinksPage:
 
+        @allure.title("Check simple link")  
         def test_simple_link(self, driver):
             page = LinksPage(driver, "https://demoqa.com/links")
             page.open()
             link, url = page.check_simple_link()
             assert link == url, f"Статус код {url}"
 
-
+        @allure.title("Check not found link")  
         def test_not_found_link(self, driver):
             page = LinksPage(driver, "https://demoqa.com/links")
             page.open()  
@@ -148,40 +167,44 @@ class TestElements:
 
     
     """Прочитать статью о том как автоматизировать скачивание файла"""
+    @allure.feature("Upload and Download")
     class TestUploadDownloadPage:
 
         # def test_download(self, driver):
         #     page = DownloadAndUploadPage(driver, "https://demoqa.com/upload-download")
         #     page.open() 
             
-
+        @allure.title("Check upload") 
         def test_upload(self, driver):
             page = DownloadAndUploadPage(driver, "https://demoqa.com/upload-download")
             page.open() 
             page.upload_file()
 
+    @allure.feature("Dynamic Properties")
     class TestDynapicPropertiesPage:
-
+        
+        @allure.title("Check click will enable btn") 
         def test_click_to_will_enable_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             is_enable = page.click_to_will_enable_btn()
             assert is_enable == True, "Кнопка не стала активной"
 
-
+        @allure.title("Check click visible after btn") 
         def test_click_to_visible_after_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             is_visible = page.click_to_visible_after_btn()
             assert is_visible == True, "Кнопка не появилась спустя заданное время"
 
-        
+        @allure.title("Check click color change btn")     
         def test_check_color_change_btn(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 
             element_before, element_after = page.check_color_change_btn()
             assert element_before != element_after, f"Цвет элемента не изменился. {element_before}"
 
+        @allure.title("Check random id element") 
         def test_get_text_with_random_id(self, driver):
             page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             page.open() 

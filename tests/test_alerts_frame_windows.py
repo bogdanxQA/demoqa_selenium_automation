@@ -1,15 +1,18 @@
 from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, ModalDialogsPage, FramesPage, NestedFramesPage
 import pytest
+import allure
 
 
 
 
 
-
+@allure.suite("Alerts, Frame and Windows")
 class TestAlertsFrameWindows:
 
+    @allure.feature("BrowserWindows")
     class TestBrowserWindows:
 
+        @allure.title("Check new tab btn")
         def test_new_tab_button(self, driver):
             page = BrowserWindowsPage(driver, "https://demoqa.com/browser-windows")
             page.open()
@@ -18,7 +21,7 @@ class TestAlertsFrameWindows:
             displayed_text = page.get_text_from_sample_page()
             assert "This is a sample page" == displayed_text, "Новая вкладка не была открыта, либо открыта не верная вкладка"
 
-
+        @allure.title("Check new window btn")
         def test_new_window_button(self, driver):
             page = BrowserWindowsPage(driver, "https://demoqa.com/browser-windows")
             page.open()
@@ -27,9 +30,10 @@ class TestAlertsFrameWindows:
             displayed_text = page.get_text_from_sample_page()
             assert "This is a sample page" == displayed_text, "Новое окно не было открыто, либо открыто не верное окно"
 
-
+    @allure.feature("Alerts")
     class TestAlerts:
 
+        @allure.title("Check alert btn")
         def test_alert_button(self, driver):
             page = AlertsPage(driver, "https://demoqa.com/alerts")
             page.open()
@@ -37,6 +41,7 @@ class TestAlertsFrameWindows:
             page.accept_alert()
             assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
 
+        @allure.title("Check alert after time btn")
         def test_alert_after_time_button(self, driver):
             page = AlertsPage(driver, "https://demoqa.com/alerts")
             page.open()
@@ -44,7 +49,7 @@ class TestAlertsFrameWindows:
             page.accept_alert()
             assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
 
-        
+        @allure.title("Check confirm box")
         @pytest.mark.parametrize("action, expected", [
             ("accept", "You selected Ok"),
             ("dismiss", "You selected Cancel")
@@ -63,7 +68,7 @@ class TestAlertsFrameWindows:
             assert page.is_alert_closed(), "Alert не был закрыт после его принятия или отклонения"
             assert result == expected, f"После нажатия на {action} ожидался текст: {expected}.\n Полученный текст: {result}"
 
-
+        @allure.title("Check prompt box btn")
         def test_prompt_box_button(self, driver):
             page = AlertsPage(driver, "https://demoqa.com/alerts")
             page.open()
@@ -74,9 +79,10 @@ class TestAlertsFrameWindows:
             assert page.is_alert_closed(), "Alert не был закрыт после его принятия"
             assert expected_value in displayed_value, f"Введенный текст в алерт: {expected_value} не найдет в отображаемом результате: {displayed_value}"
 
-
+    @allure.feature("ModalDialogs")
     class TestModalDialogs:
 
+        @allure.title("Check small modal")
         def test_small_modal(self, driver):
             page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
             page.open()
@@ -84,7 +90,7 @@ class TestAlertsFrameWindows:
             page.click_to_close_small_modal()
             assert page.is_modal_closed() == True, "Не удалось закрыть модальное окно"
 
-
+        @allure.title("Check large modal")
         def test_large_modal(self, driver):
             page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
             page.open()
@@ -92,8 +98,10 @@ class TestAlertsFrameWindows:
             page.click_to_close_large_modal()
             assert page.is_modal_closed() == True, "Не удалось закрыть модальное окно"
 
+    @allure.feature("Frames")
     class TestFrames:
 
+        @allure.title("Check large frame")
         def test_first_frame(self,driver):
             page = FramesPage(driver, "https://demoqa.com/frames")
             page.open()
@@ -102,6 +110,7 @@ class TestAlertsFrameWindows:
             print(result)
             assert excepted == result, "Фрейм не существует или был изменен"
 
+        @allure.title("Check small frame")
         def test_second_frame(self,driver):
             page = FramesPage(driver, "https://demoqa.com/frames")
             page.open()
@@ -110,15 +119,17 @@ class TestAlertsFrameWindows:
             print(result)
             assert excepted == result, "Фрейм не существует или был изменен"
 
+    @allure.feature("NestedFrames")
     class TestNestedFrames:
 
+        @allure.title("Check parent frame")
         def test_parent_frame(self, driver):
             page = NestedFramesPage(driver, "https://demoqa.com/nestedframes")
             page.open()
             result = page.switch_to_parent_frame()
             assert result == "Parent frame", "Фрейм не существует или был изменен"
             
-
+        @allure.title("Check child frame")
         def test_child_frame(self, driver):
             page = NestedFramesPage(driver, "https://demoqa.com/nestedframes")
             page.open()

@@ -9,3 +9,5 @@ downloads/
 *.pkl
 debug.py
 debug,py
+allure-results/
+allure-report/
