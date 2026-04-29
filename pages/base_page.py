@@ -143,6 +143,8 @@ class BasePage:
 
     def tab_or_window_is_opened(self, count, timeout = 5):
         return WebDriverWait(self.driver, timeout).until(EC.number_of_windows_to_be(count))
+    
+    
 
         
 

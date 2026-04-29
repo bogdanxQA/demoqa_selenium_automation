@@ -3,6 +3,7 @@ from locators.sortable_page_locators import SortablePageLocators
 from locators.selectable_page_locators import SelectablePageLocators
 from locators.resizable_page_locators import ResizablePageLocators
 from locators.droppable_page_locators import DroppablePageLocators
+from locators.dragabble_page_locators import DragabblePageLocators
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.common.action_chains import ActionChains
 import random
@@ -246,6 +247,67 @@ class DroppablePage(BasePage):
         return left, top, drop_box.text
 
 
+class DragabblePage(BasePage):
+
+    locators = DragabblePageLocators()
+
+    
+    def get_element_location_before_and_after_move(self, element):
+
+        position_before = element.location
+        x = random.randint(20, 50)
+        y = random.randint(20, 50)
+        self.drag_and_drop_by_offset(element, x, y)
+        position_after = element.location
+        return position_after, position_before
+    
+    def simple_drag_box(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_box = self.element_is_visible(self.locators.DRAG_BOX_SIMPLE)
+        position_after, position_before = self.get_element_location_before_and_after_move(drag_box)
+        return position_after, position_before
+    
+
+    def axis_restricted_drag_box(self, which: Literal["only_x", "only_y"]):
+        self.element_is_visible(self.locators.AXIS_RESTRICTED_TAB).click()
+
+        if which == "only_x":
+            drag_box = self.element_is_visible(self.locators.DRAG_BOX_ONLY_X)
+            
+        elif which == "only_y":
+            drag_box = self.element_is_visible(self.locators.DRAG_BOX_ONLY_Y)
+
+        position_after, position_before = self.get_element_location_before_and_after_move(drag_box)
+        return position_after, position_before
+    
+
+
+    def drag_and_drop_with_bounds(self, x_offset=500, y_offset=500):
+        self.element_is_visible(self.locators.CONTAINER_RESTRICTED_TAB).click()
+        draggable = self.element_is_visible(self.locators.CONTAINED_DRAG_BOX)
+        container = self.element_is_visible(self.locators.CONTAINER)
+        cont_rect = container.rect
+        left, top = cont_rect['x'], cont_rect['y']
+        right = left + cont_rect['width']
+        bottom = top + cont_rect['height']
+
+        start = draggable.location
+        self.drag_and_drop_by_offset(draggable, x_offset, y_offset)
+        end = draggable.location
+        size = draggable.size
+
+
+        return {
+        'start': start,
+        'end': end,
+        'size': size,
+        'bounds': (left, top, right, bottom)
+    }
+            
+
+
+
+        
         
 
     

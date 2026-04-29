@@ -1,4 +1,4 @@
-from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DragabblePage
 import pytest
 
 
@@ -134,6 +134,50 @@ class TestInteractions():
             left, top, res = page.drag_and_drop_revert_and_not_revert_item("not_revert")
             assert (left, top) != ("0px", "0px"), "Not revertable элемент изменил свою позицию после drag and drop."
             assert res == "Dropped!", "Элемент не был перемещен или изменился текст в drop box после перемещения"
+
+    
+    class TestDragabblePage:
+
+        def test_simple_drag_box_move(self, driver):
+            page = DragabblePage(driver, "https://demoqa.com/dragabble")
+            page.open()
+            position_after, position_before = page.simple_drag_box()
+            assert position_after != position_before, f"Элемент drag_box не был перемещен"
+
+
+        def test_only_x_drag_box_move(self, driver):
+            page = DragabblePage(driver, "https://demoqa.com/dragabble")
+            page.open()
+            position_after, position_before = page.axis_restricted_drag_box("only_x")
+            assert position_after["y"] == position_before["y"] and position_after["x"] != position_before["x"], \
+            f"Элемент должен смещаться только по горизонтали. " \
+            f"Позиция до: ({position_before}), после: ({position_after}). " \
+            f"Ошибка: {'Y изменился' if position_after['y'] != position_before['y'] else 'X не изменился'}"
+
+        def test_only_y_drag_box_move(self, driver):
+            page = DragabblePage(driver, "https://demoqa.com/dragabble")
+            page.open()
+            position_after, position_before = page.axis_restricted_drag_box("only_y")
+            assert position_after["x"] == position_before["x"] and position_after["y"] != position_before["y"], \
+            f"Элемент должен смещаться только по вертикали. " \
+            f"Позиция до: ({position_before}), после: ({position_after}). " \
+            f"Ошибка: {'X изменился' if position_after['x'] != position_before['x'] else 'Y не изменился'}"
+
+
+        def test_container_restricted_drag_and_drop(self, driver):
+            page = DragabblePage(driver, "https://demoqa.com/dragabble")
+            page.open()
+            data = page.drag_and_drop_with_bounds()
+            start, end = data['start'], data['end']
+            left, top, right, bottom = data['bounds']
+            width, height = data['size']['width'], data['size']['height']
+            
+            assert start != end, "Элемент не сдвинулся"
+            assert end['x'] >= left and end['x'] + width <= right, "Элемент вышел за горизонтальные границы"
+            assert end['y'] >= top and end['y'] + height <= bottom, "Элемент вышел за вертикальные границы"
+
+            
+
 
             
             
