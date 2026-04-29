@@ -163,9 +163,10 @@ class SliderPage(BasePage):
         slider = self.element_is_visible(self.locators.SLIDER)
         self.scroll_to_element(slider)
         value_before = slider.get_attribute("value")
+        offset = random.randint(26, 100)
         with allure.step(f"Drag slider by {offset}px horizontally"):
             time.sleep(0.1)
-            self.drag_and_drop_by_offset(slider, random.randint(26, 100), 0)
+            self.drag_and_drop_by_offset(slider, offset, 0)
         value_after = slider.get_attribute("value")
         return value_before, value_after
     
