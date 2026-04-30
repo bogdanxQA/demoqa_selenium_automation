@@ -1,0 +1,48 @@
+name: Generate and Deploy Allure Report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Allure CLI
+      run: |
+        wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+        tar -zxvf allure-2.27.0.tgz
+        echo "./allure-2.27.0/bin" >> $GITHUB_PATH
+
+    - name: Run tests (continue on error)
+      run: |
+        pytest --alluredir=allure-results --maxfail=0
+      continue-on-error: true
+      env:
+        GITHUB_ACTIONS: true
+
+    - name: Generate Allure report
+      run: |
+        ./allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
+      if: always()
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        publish_branch: gh-pages
+      if: always()

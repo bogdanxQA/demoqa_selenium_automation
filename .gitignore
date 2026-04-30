@@ -10,4 +10,5 @@ downloads/
 debug.py
 debug,py
 allure-results/
+allure_results/
 allure-report/
