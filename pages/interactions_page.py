@@ -126,10 +126,11 @@ class ResizablePage(BasePage):
         resizable = self.element_is_present(self.locators.RESIZABLE_WO_BOUNDARIES)
         start_size = self.get_width_and_height(resizable)
         handle = self.elements_are_visible(self.locators.HANDLE)[1]
+        self.scroll_to_element(handle)
         time.sleep(0.5)
-        self.drag_and_drop_by_offset(handle, random.randint(1, 400), random.randint(1, 400))
+        self.drag_and_drop_by_offset(handle, random.randint(1, 100), random.randint(1, 100))
         increased_size = self.get_width_and_height(resizable)
-        self.drag_and_drop_by_offset(handle, -500, -500)
+        self.drag_and_drop_by_offset(handle, -250, -250)
         min_size = self.get_width_and_height(resizable)
         return start_size, increased_size, min_size
     
